@@ -16,7 +16,8 @@ function figmaAssetResolver() {
   }
 }
 
-export default defineConfig({
+export default defineConfig(({ mode }) => ({
+  base: mode === 'production' ? '/PortfolioWebsite/' : '/',
   plugins: [
     figmaAssetResolver(),
     // The React and Tailwind plugins are both required for Make, even if
@@ -29,4 +30,4 @@ export default defineConfig({
       '@': path.resolve(__dirname, './src/app'),
     },
   },
-})
+}))
