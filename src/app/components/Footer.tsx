@@ -1,0 +1,233 @@
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'motion/react';
+import { ArrowUpRight, Instagram, Twitter, Linkedin, Mail, X, Send } from 'lucide-react';
+
+export const Footer = () => {
+  const [isFormOpen, setIsFormOpen] = useState(false);
+
+  return (
+    <>
+      <footer id="contact" className="relative py-32 px-6 overflow-hidden rule-top">
+        <div className="container mx-auto">
+          <div className="grid md:grid-cols-[1.5fr_1fr] gap-20 mb-32">
+            
+            <div>
+              <motion.h2 
+                initial={{ opacity: 0, y: 50 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-6xl md:text-9xl font-medium tracking-tighter leading-[0.9] mb-16"
+              >
+                Let's <br />
+                <span className="italic font-serif text-[#135029]">Connect</span>
+              </motion.h2>
+              
+              <div className="flex flex-col gap-10">
+                 <button 
+                   onClick={() => setIsFormOpen(true)}
+                   className="group flex items-center gap-6 text-left transition-all"
+                 >
+                   <div className="w-20 h-20 rounded-full bg-[#135029] text-white flex items-center justify-center group-hover:scale-105 group-hover:bg-[#0d3a1e] transition-all duration-500">
+                     <ArrowUpRight className="w-8 h-8 group-hover:rotate-45 transition-transform duration-500" />
+                   </div>
+                   <div>
+                     <span className="block text-4xl font-light tracking-tighter text-neutral-900 group-hover:translate-x-2 transition-transform duration-300">Get in Touch</span>
+                     <span className="block text-sm font-mono uppercase tracking-widest text-neutral-500 mt-1 group-hover:text-neutral-600 transition-colors">Open to Summer 2027 internships</span>
+                   </div>
+                 </button>
+
+                 <div className="flex flex-col gap-4 pl-4">
+                   <a href="mailto:arnsharma@ucdavis.edu" className="group flex items-center gap-4 text-lg font-mono text-neutral-500 hover:text-neutral-900 transition-colors">
+                     <span className="w-2 h-2 rounded-full bg-[#135029]" />
+                     arnsharma@ucdavis.edu
+                   </a>
+                   <a href="tel:+19172246315" className="group flex items-center gap-4 text-lg font-mono text-neutral-500 hover:text-neutral-900 transition-colors">
+                     <span className="w-2 h-2 rounded-full bg-[#135029]/40" />
+                     +1 (917) 224-6315
+                   </a>
+                   <span className="flex items-center gap-4 text-lg font-mono text-neutral-500">
+                     <span className="w-2 h-2 rounded-full bg-[#135029]/40" />
+                     Davis, CA
+                   </span>
+                 </div>
+              </div>
+            </div>
+
+            <div className="flex flex-col justify-end gap-12">
+              <div className="grid grid-cols-2 gap-12">
+                <div>
+                  <h4 className="font-mono text-xs uppercase tracking-widest text-neutral-500 mb-6">Elsewhere</h4>
+                  <ul className="space-y-4">
+                    {[
+                      { name: 'LinkedIn', href: 'https://linkedin.com/in/arnav-sharma-ucd' },
+                      { name: 'GitHub', href: 'https://github.com/arnavUCD' },
+                      { name: 'Email', href: 'mailto:arnsharma@ucdavis.edu' }
+                    ].map((social) => (
+                      <li key={social.name}>
+                        <a href={social.href} target="_blank" rel="noreferrer" className="flex items-center gap-2 text-lg font-light text-neutral-600 hover:text-neutral-900 transition-colors group">
+                          {social.name}
+                          <ArrowUpRight className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-all -translate-x-2 group-hover:translate-x-0" />
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-mono text-xs uppercase tracking-widest text-neutral-500 mb-6">Sitemap</h4>
+                  <ul className="space-y-4">
+                    {[
+                      { name: 'About', href: '#about' },
+                      { name: 'Projects', href: '#work' },
+                      { name: 'Experience', href: '#experience' },
+                      { name: 'Contact', href: '#contact' }
+                    ].map((link) => (
+                      <li key={link.name}>
+                        <a href={link.href} className="text-lg font-light text-neutral-600 hover:text-neutral-900 transition-colors">
+                          {link.name}
+                        </a>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div className="flex flex-col md:flex-row justify-between items-center pt-12 border-t border-black/[0.06] gap-6">
+            <p className="font-mono text-xs uppercase tracking-widest text-neutral-600">
+              © 2026 Arnav Sharma.
+            </p>
+            <p className="font-mono text-xs uppercase tracking-widest text-neutral-600">
+              Davis, California
+            </p>
+          </div>
+        </div>
+      </footer>
+
+      <ContactModal isOpen={isFormOpen} onClose={() => setIsFormOpen(false)} />
+    </>
+  );
+};
+
+const ContactModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
+  const [formState, setFormState] = useState<'idle' | 'submitting' | 'success'>('idle');
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setFormState('submitting');
+    setTimeout(() => {
+      setFormState('success');
+      setTimeout(() => {
+        onClose();
+        setFormState('idle');
+      }, 2000);
+    }, 1500);
+  };
+
+  return (
+    <AnimatePresence>
+      {isOpen && (
+        <>
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={onClose}
+            className="fixed inset-0 bg-white/80 backdrop-blur-md z-[100]"
+          />
+          
+          <motion.div
+            initial={{ opacity: 0, x: "100%" }}
+            animate={{ opacity: 1, x: 0 }}
+            exit={{ opacity: 0, x: "100%" }}
+            transition={{ type: "spring", damping: 30, stiffness: 300 }}
+            className="fixed inset-y-0 right-0 z-[101] w-full md:w-[600px] bg-white border-l border-black/10 shadow-2xl p-8 md:p-12 overflow-y-auto"
+          >
+            <button 
+              onClick={onClose}
+              className="absolute top-8 right-8 p-2 text-neutral-500 hover:text-neutral-900 transition-colors z-10"
+            >
+              <X className="w-6 h-6" />
+            </button>
+
+            {formState === 'success' ? (
+              <div className="h-full flex flex-col items-center justify-center text-center">
+                <motion.div
+                  initial={{ scale: 0 }}
+                  animate={{ scale: 1 }}
+                  className="w-20 h-20 bg-[#135029] rounded-full flex items-center justify-center mb-6"
+                >
+                  <Send className="w-8 h-8 text-white" />
+                </motion.div>
+                <h3 className="text-3xl font-medium mb-2">Message Sent</h3>
+                <p className="text-neutral-600 font-light">I'll get back to you shortly.</p>
+              </div>
+            ) : (
+              <div className="mt-12">
+                <span className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-6 block">04 / Contact</span>
+                <h3 className="text-4xl md:text-5xl font-medium tracking-tighter mb-2">
+                  Say <br />
+                  <span className="italic font-serif text-[#135029]">Hello</span>
+                </h3>
+                <p className="text-neutral-600 font-light mb-12">
+                  Roles, research, or just a good problem — I'd like to hear about it.
+                </p>
+
+                <form onSubmit={handleSubmit} className="space-y-12">
+                  <div className="space-y-8">
+                    <div className="group relative">
+                      <input 
+                        required 
+                        type="text" 
+                        placeholder="Your Name"
+                        className="w-full bg-transparent border-b border-black/10 py-4 text-xl font-light focus:outline-none focus:border-[#135029] transition-colors placeholder:text-neutral-700"
+                      />
+                    </div>
+                    
+                    <div className="group relative">
+                      <input 
+                        required 
+                        type="email" 
+                        placeholder="Email Address"
+                        className="w-full bg-transparent border-b border-black/10 py-4 text-xl font-light focus:outline-none focus:border-[#135029] transition-colors placeholder:text-neutral-700"
+                      />
+                    </div>
+
+                    <div className="group relative">
+                      <textarea 
+                        required 
+                        placeholder="What's on your mind?"
+                        rows={4}
+                        className="w-full bg-transparent border-b border-black/10 py-4 text-xl font-light focus:outline-none focus:border-[#135029] transition-colors resize-none placeholder:text-neutral-700"
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                     <label className="text-xs font-mono uppercase tracking-widest text-neutral-500">Reason for reaching out</label>
+                     <div className="flex flex-wrap gap-3">
+                        {['Internship', 'Full-time', 'Research', 'Just saying hi'].map(range => (
+                          <button type="button" key={range} className="px-4 py-2 rounded-full border border-black/10 text-sm font-light hover:bg-[#135029] hover:text-white transition-all">
+                            {range}
+                          </button>
+                        ))}
+                     </div>
+                  </div>
+
+                  <button 
+                    type="submit"
+                    disabled={formState === 'submitting'}
+                    className="w-full bg-[#135029] text-white text-lg font-medium py-4 rounded-full hover:scale-[1.02] active:scale-[0.98] transition-all flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    {formState === 'submitting' ? 'Sending...' : 'Send Message'}
+                  </button>
+                </form>
+              </div>
+            )}
+          </motion.div>
+        </>
+      )}
+    </AnimatePresence>
+  );
+};
