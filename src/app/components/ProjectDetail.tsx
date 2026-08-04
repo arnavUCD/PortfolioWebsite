@@ -45,7 +45,7 @@ export const ProjectDetail = () => {
           className="mb-24"
         >
           <div className="flex flex-col md:flex-row justify-between items-end gap-8 mb-16">
-             <h1 className="text-6xl md:text-9xl font-medium tracking-tighter leading-[0.9]">
+             <h1 className="font-display text-6xl md:text-8xl tracking-[-0.02em] leading-[0.95]">
                {project.title}
              </h1>
              <span className="font-mono text-sm text-neutral-600 mb-2">{project.category} — {project.year}</span>

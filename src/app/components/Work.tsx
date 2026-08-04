@@ -13,9 +13,9 @@ export const Work = () => {
              <Link to="/" className="text-xs font-mono uppercase tracking-widest text-neutral-500 hover:text-neutral-900 transition-colors mb-8 block">
                ← Back to Home
              </Link>
-             <h1 className="text-6xl md:text-9xl font-medium tracking-tighter leading-[0.9]">
+             <h1 className="font-display text-6xl md:text-8xl tracking-[-0.02em] leading-[0.95]">
                Projects <br />
-               <span className="italic font-serif text-[#135029]">2025—26</span>
+               <span className="font-display text-[#135029]">2025—26</span>
              </h1>
            </div>
         </div>

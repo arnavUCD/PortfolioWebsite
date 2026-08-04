@@ -27,7 +27,7 @@ export const Projects = () => {
           <div>
             <div className="flex items-center gap-6 mb-8">
               <div className="flex items-baseline gap-3">
-                <span className="font-serif italic text-lg text-neutral-900">03</span>
+                <span className="font-mono text-xs text-[#135029]">03</span>
                 <span className="text-xs font-mono uppercase tracking-[0.3em] text-neutral-600">
                   Selected Projects
                 </span>

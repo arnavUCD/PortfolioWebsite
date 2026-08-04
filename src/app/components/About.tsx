@@ -20,7 +20,7 @@ export const About = () => {
         {/* Section header */}
         <div className="flex items-center gap-6 mb-20">
           <div className="flex items-baseline gap-3">
-            <span className="font-serif italic text-lg text-neutral-900">02</span>
+            <span className="font-mono text-xs text-[#135029]">02</span>
             <span className="text-xs font-mono uppercase tracking-[0.3em] text-neutral-600">About</span>
           </div>
           <div className="h-px flex-1 max-w-xs bg-gradient-to-r from-black/20 to-transparent" />
@@ -37,7 +37,7 @@ export const About = () => {
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
               className="font-display text-5xl md:text-7xl leading-[1.02] tracking-[-0.02em] text-neutral-900 mb-12"
             >
-              A bit <span className="italic text-[#135029]">about</span> me.
+              A bit about <span className="text-[#135029]">me</span>.
             </motion.h2>
 
             <motion.div

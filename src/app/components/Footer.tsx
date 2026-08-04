@@ -16,10 +16,10 @@ export const Footer = () => {
                 initial={{ opacity: 0, y: 50 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="text-6xl md:text-9xl font-medium tracking-tighter leading-[0.9] mb-16"
+                className="font-display text-6xl md:text-8xl tracking-[-0.02em] leading-[0.95] mb-16"
               >
                 Let's <br />
-                <span className="italic font-serif text-[#135029]">Connect</span>
+                <span className="text-[#135029]">Connect</span>
               </motion.h2>
               
               <div className="flex flex-col gap-10">
@@ -168,7 +168,7 @@ const ContactModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                 <span className="text-xs font-mono uppercase tracking-widest text-neutral-500 mb-6 block">04 / Contact</span>
                 <h3 className="text-4xl md:text-5xl font-medium tracking-tighter mb-2">
                   Say <br />
-                  <span className="italic font-serif text-[#135029]">Hello</span>
+                  <span className="text-[#135029]">Hello</span>
                 </h3>
                 <p className="text-neutral-600 font-light mb-12">
                   Roles, research, or just a good problem — I'd like to hear about it.

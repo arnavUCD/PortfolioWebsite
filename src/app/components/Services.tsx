@@ -1,187 +1,215 @@
 import React, { useRef } from 'react';
-import { motion, useInView } from 'motion/react';
-import { Briefcase, GraduationCap, Cpu, Code2, Database, Wrench } from 'lucide-react';
+import { motion, useScroll, useSpring } from 'motion/react';
 
-const experience = [
+type Entry = {
+  kind: 'work' | 'education';
+  org: string;
+  role: string;
+  period: string;
+  place: string;
+  points: string[];
+  tags: string[];
+};
+
+const timeline: Entry[] = [
   {
-    company: "Fonabit Technologies Pvt. Ltd.",
-    role: "Software Developer & Data Research Intern",
-    period: "Jun 2025 — Sep 2025",
+    kind: 'work',
+    org: 'Fonabit Technologies',
+    role: 'Software Developer & Data Research Intern',
+    period: 'Jun — Sep 2025',
+    place: 'Remote',
     points: [
-      "Built machine learning models to analyze datasets and generate insights that informed data-driven business decisions.",
-      "Developed Tableau dashboards translating model outputs into clear visual reports, cutting manual reporting effort by 70%.",
-      "Partnered with the Salesforce support team to streamline organizational workflows."
-    ]
+      'Built machine learning models over internal datasets and turned the output into insights the business actually used.',
+      'Shipped Tableau dashboards on top of those models, cutting manual reporting effort by roughly 70%.',
+      'Worked with the Salesforce support team to streamline internal workflows.'
+    ],
+    tags: ['Python', 'scikit-learn', 'Pandas', 'Tableau', 'Salesforce']
   },
   {
-    company: "Pixabits Technologies Pvt. Ltd.",
-    role: "Software Developer Intern",
-    period: "Jun 2024 — Aug 2024",
+    kind: 'work',
+    org: 'Pixabits Technologies',
+    role: 'Software Developer Intern',
+    period: 'Jun — Aug 2024',
+    place: 'Remote',
     points: [
-      "Built backend services and REST APIs in Python and Java, improving response time and throughput by over 50%.",
-      "Debugged and performance-tested features alongside cross-functional teams across releases.",
-      "Implemented responsive UI from Figma designs and refined components using user analytics, increasing engagement."
-    ]
+      'Built backend services and REST APIs in Python and Java, improving response time and throughput by over 50%.',
+      'Debugged and performance-tested features with cross-functional teams across several releases.',
+      'Implemented responsive UI from Figma designs and refined components against user analytics.'
+    ],
+    tags: ['Python', 'Java', 'REST APIs', 'React', 'Figma']
   },
   {
-    company: "University of California, Davis",
-    role: "B.S. Computer Science · Minor in Business Studies",
-    period: "Expected Jun 2027",
+    kind: 'education',
+    org: 'University of California, Davis',
+    role: 'B.S. Computer Science · Minor in Business Studies',
+    period: 'Sep 2023 — Jun 2027',
+    place: 'Davis, CA',
     points: [
-      "Dean's List, Spring 2024 — College of Engineering | Graduate School of Management.",
-      "Coursework: Machine Learning, Artificial Intelligence, Computer Vision, Operating Systems, Computer Architecture."
-    ]
+      "Dean's List, Spring 2024 — College of Engineering.",
+      'Coursework in machine learning, artificial intelligence, and computer vision, alongside operating systems and computer architecture.'
+    ],
+    tags: ['Machine Learning', 'Artificial Intelligence', 'Computer Vision', 'Operating Systems', 'Computer Architecture']
   }
 ];
 
-const skillGroups = [
+const skills = [
+  { label: 'Languages', items: ['Python', 'Java', 'C', 'C++', 'JavaScript', 'Assembly'] },
   {
-    icon: Code2,
-    title: "Languages",
-    description: "Python, Java, C, C++, JavaScript, Assembly"
+    label: 'ML & AI',
+    items: ['PyTorch', 'scikit-learn', 'CNNs', 'DistilBERT', 'OpenCV', 'NLP', 'TF-IDF', 'SMOTE']
   },
   {
-    icon: Cpu,
-    title: "Machine Learning & AI",
-    description: "PyTorch, scikit-learn, Deep Learning, CNNs, Transformers (DistilBERT), Computer Vision (OpenCV), NLP, TF-IDF, SMOTE"
+    label: 'Systems',
+    items: ['Operating Systems', 'Concurrency', 'Memory Management', 'CPU Pipelining', 'Caches', 'Arduino / BLE']
   },
   {
-    icon: Wrench,
-    title: "Systems & Architecture",
-    description: "Operating Systems, Concurrency & Multithreading, Memory Management, CPU Pipelining, Cache/Memory Hierarchy, Embedded (Arduino/BLE)"
-  },
-  {
-    icon: Database,
-    title: "Data, Backend & Tools",
-    description: "NumPy, Pandas, FastAPI, Next.js, Streamlit, REST APIs, DSP, Git, Linux/Unix, Jupyter, Tableau, Salesforce, Figma"
+    label: 'Data & Backend',
+    items: ['NumPy', 'Pandas', 'FastAPI', 'Next.js', 'Streamlit', 'DSP', 'Git', 'Linux', 'Tableau']
   }
 ];
+
+const TimelineRow = ({ entry }: { entry: Entry }) => (
+  <motion.article
+    initial={{ opacity: 0, y: 28 }}
+    whileInView={{ opacity: 1, y: 0 }}
+    viewport={{ once: true, margin: '-80px' }}
+    transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
+    className="group relative grid md:grid-cols-[10rem_1fr] gap-4 md:gap-12 py-12 border-t border-black/[0.09] last:border-b"
+  >
+    {/* Left gutter — period + marker */}
+    <div>
+      <div className="hidden md:block absolute -left-10 top-[3.7rem] -translate-x-1/2">
+        <motion.span
+          initial={{ scale: 0 }}
+          whileInView={{ scale: 1 }}
+          viewport={{ once: true, margin: '-80px' }}
+          transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+          className={`block w-[9px] h-[9px] rounded-full ring-4 ring-[#f7e7ce] transition-colors ${
+            entry.kind === 'education' ? 'bg-[#f7e7ce] border-2 border-[#135029]' : 'bg-[#135029]'
+          }`}
+        />
+      </div>
+      <div className="font-mono text-xs uppercase tracking-widest text-neutral-500">
+        {entry.period}
+      </div>
+      <div className="mt-2 font-mono text-[10px] uppercase tracking-widest text-neutral-400">
+        {entry.place}
+      </div>
+    </div>
+
+    {/* Body */}
+    <div>
+      <div className="flex flex-wrap items-baseline gap-x-4 gap-y-1">
+        <h3 className="text-2xl md:text-3xl tracking-tight text-neutral-900">{entry.org}</h3>
+        <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-neutral-500">
+          {entry.kind === 'education' ? 'Education' : 'Internship'}
+        </span>
+      </div>
+
+      <p className="mt-2 text-lg text-[#135029]">{entry.role}</p>
+
+      <ul className="mt-6 space-y-3 max-w-2xl">
+        {entry.points.map((point) => (
+          <li key={point} className="flex gap-4 text-neutral-600 font-light leading-relaxed">
+            <span className="mt-[0.7rem] w-1 h-1 shrink-0 rounded-full bg-[#135029]/50" />
+            <span>{point}</span>
+          </li>
+        ))}
+      </ul>
+
+      <div className="mt-6 flex flex-wrap gap-2">
+        {entry.tags.map((tag) => (
+          <span
+            key={tag}
+            className="px-2.5 py-1 rounded-full border border-black/[0.07] bg-white/45 text-[11px] font-mono text-neutral-600"
+          >
+            {tag}
+          </span>
+        ))}
+      </div>
+    </div>
+  </motion.article>
+);
 
 export const Services = () => {
-  const containerRef = useRef(null);
-  const isInView = useInView(containerRef, { once: true, margin: "-100px" });
+  const railRef = useRef<HTMLDivElement>(null);
+  const { scrollYProgress } = useScroll({
+    target: railRef,
+    offset: ['start 75%', 'end 60%']
+  });
+  const spine = useSpring(scrollYProgress, { stiffness: 120, damping: 30, restDelta: 0.001 });
 
   return (
-    <section ref={containerRef} id="experience" className="py-32 px-6 relative overflow-hidden">
-       {/* A pale panel lifts this section off the page surface */}
-       <div className="absolute inset-x-0 top-0 bottom-0 bg-white/25 rule-top pointer-events-none" />
+    <section id="experience" className="relative py-32 px-6 rule-top">
+      <div className="container mx-auto">
 
-      <div className="container mx-auto relative z-10">
-
-        {/* Section Header */}
-        <div className="mb-32 grid md:grid-cols-2 gap-16 items-end">
-          <div>
-            <div className="flex items-center gap-6 mb-8">
-               <div className="flex items-baseline gap-3">
-                  <span className="font-serif italic text-lg text-neutral-900">04</span>
-                  <span className="text-xs font-mono uppercase tracking-[0.3em] text-neutral-600">/ Experience</span>
-               </div>
-               <div className="h-px w-32 bg-gradient-to-r from-black/20 to-transparent" />
+        {/* Section header */}
+        <div className="mb-20">
+          <div className="flex items-center gap-6 mb-8">
+            <div className="flex items-baseline gap-3">
+              <span className="font-mono text-xs text-[#135029]">04</span>
+              <span className="text-xs font-mono uppercase tracking-[0.3em] text-neutral-600">
+                Experience
+              </span>
             </div>
-            <motion.h2
-              initial={{ opacity: 0, y: 50 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="text-6xl md:text-9xl font-medium tracking-tighter leading-none"
-            >
-              Work & <br />
-              <span className="italic font-serif text-[#135029]">Education</span>
-            </motion.h2>
+            <div className="h-px flex-1 max-w-xs bg-gradient-to-r from-black/20 to-transparent" />
           </div>
 
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2, duration: 0.8 }}
-            className="md:pl-12 border-l border-black/10 relative"
-          >
-            <div className="absolute top-0 left-[-1px] h-12 w-[1px] bg-gradient-to-b from-[#135029] to-transparent" />
-            <p className="text-xl md:text-2xl font-light text-neutral-700 leading-relaxed">
-              Two software internships shipping production backends, ML models, and analytics — alongside a CS degree at UC Davis.
-            </p>
-          </motion.div>
+          <h2 className="font-display text-5xl md:text-7xl leading-[1.02] tracking-[-0.02em] text-neutral-900">
+            Work &amp; education
+          </h2>
+          <p className="mt-6 max-w-xl text-lg font-light text-neutral-600 leading-relaxed">
+            Two software internships and a degree in progress at UC Davis.
+          </p>
         </div>
 
-        {/* Experience Timeline */}
-        <div className="mb-32">
-          {experience.map((item, index) => (
+        {/* Timeline */}
+        <div ref={railRef} className="relative md:pl-10">
+          {/* Spine */}
+          <div className="hidden md:block absolute left-0 top-0 bottom-0 w-px bg-black/[0.08]">
             <motion.div
-              key={item.company}
-              initial={{ opacity: 0, y: 40 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.1, duration: 0.7 }}
-              className="group grid md:grid-cols-[0.9fr_1.6fr] gap-8 md:gap-16 py-12 border-t border-black/10 last:border-b hover:bg-black/[0.02] transition-colors duration-500 px-2"
-            >
-              <div className="flex items-start gap-4">
-                 <div className="mt-1 w-10 h-10 shrink-0 rounded-full bg-black/[0.04] border border-black/[0.06] flex items-center justify-center group-hover:bg-[#135029] group-hover:text-white transition-colors duration-500">
-                   {index === experience.length - 1
-                     ? <GraduationCap className="w-5 h-5" />
-                     : <Briefcase className="w-5 h-5" />}
-                 </div>
-                 <div>
-                   <h3 className="text-2xl font-medium tracking-tight leading-tight">{item.company}</h3>
-                   <p className="font-mono text-xs uppercase tracking-widest text-neutral-500 mt-3">{item.period}</p>
-                 </div>
-              </div>
+              style={{ scaleY: spine }}
+              className="absolute inset-0 origin-top bg-[#135029]/60"
+            />
+          </div>
 
-              <div>
-                <p className="italic font-serif text-lg text-neutral-700 mb-6">{item.role}</p>
-                <ul className="space-y-4">
-                  {item.points.map((point) => (
-                    <li key={point} className="flex gap-4 text-neutral-600 font-light leading-relaxed">
-                      <span className="mt-[0.65rem] w-1 h-1 shrink-0 rounded-full bg-neutral-500" />
-                      <span>{point}</span>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            </motion.div>
+          {timeline.map((entry) => (
+            <TimelineRow key={entry.org} entry={entry} />
           ))}
         </div>
 
-        {/* Skills Grid */}
-        <div>
-          <div className="flex items-center gap-6 mb-16">
-             <span className="text-xs font-mono uppercase tracking-[0.3em] text-neutral-600">Technical Skills</span>
-             <div className="h-px flex-1 bg-gradient-to-r from-black/20 to-transparent" />
+        {/* Skills */}
+        <div className="mt-28">
+          <div className="flex items-center gap-6 mb-10">
+            <span className="text-xs font-mono uppercase tracking-[0.3em] text-neutral-600">
+              Toolkit
+            </span>
+            <div className="h-px flex-1 bg-gradient-to-r from-black/20 to-transparent" />
           </div>
 
-          <div className="grid md:grid-cols-2 gap-8">
-            {skillGroups.map((group, index) => (
+          <dl>
+            {skills.map((group, i) => (
               <motion.div
-                 key={group.title}
-                 initial={{ opacity: 0, y: 40 }}
-                 whileInView={{ opacity: 1, y: 0 }}
-                 viewport={{ once: true }}
-                 transition={{ delay: index * 0.1, duration: 0.7 }}
+                key={group.label}
+                initial={{ opacity: 0, y: 16 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: '-60px' }}
+                transition={{ delay: i * 0.06, duration: 0.6 }}
+                className="grid md:grid-cols-[12rem_1fr] gap-3 md:gap-10 py-6 border-t border-black/[0.09] last:border-b"
               >
-                 <SkillCard group={group} index={index} />
+                <dt className="font-mono text-xs uppercase tracking-widest text-neutral-500 md:pt-1">
+                  {group.label}
+                </dt>
+                <dd className="flex flex-wrap gap-x-6 gap-y-2 text-neutral-700 font-light">
+                  {group.items.map((item) => (
+                    <span key={item}>{item}</span>
+                  ))}
+                </dd>
               </motion.div>
             ))}
-          </div>
+          </dl>
         </div>
       </div>
     </section>
-  );
-};
-
-const SkillCard = ({ group, index }: { group: any, index: number }) => {
-  return (
-    <motion.div
-      whileHover={{ y: -6 }}
-      className="group h-full p-8 rounded-2xl bg-black/[0.04] border border-black/[0.06] hover:border-black/15 hover:bg-black/5 transition-all duration-500 backdrop-blur-sm"
-    >
-      <div className="mb-8 w-12 h-12 rounded-full bg-black/[0.04] flex items-center justify-center group-hover:bg-[#135029] group-hover:text-white transition-colors duration-500">
-        <group.icon className="w-6 h-6" />
-      </div>
-
-      <h3 className="text-xl font-medium mb-4 tracking-tight">{group.title}</h3>
-      <p className="text-neutral-600 font-light leading-relaxed group-hover:text-neutral-700 transition-colors">
-        {group.description}
-      </p>
-    </motion.div>
   );
 };
