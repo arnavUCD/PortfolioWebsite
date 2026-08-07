@@ -43,7 +43,7 @@ export const Hero = () => {
         transition={{ delay: 1, duration: 1 }}
         className="absolute bottom-10 right-8 hidden md:block text-lg text-ink-dim"
       >
-        Built in <span className="text-ink">Davis, CA</span>
+        Built with care
       </motion.span>
 
       {/* Scroll cue */}
