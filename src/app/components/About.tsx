@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'motion/react';
 
 const facts = [
@@ -20,10 +19,10 @@ export const About = () => {
         {/* Section header */}
         <div className="flex items-center gap-6 mb-20">
           <div className="flex items-baseline gap-3">
-            <span className="font-mono text-xs text-[#135029]">02</span>
-            <span className="text-xs font-mono uppercase tracking-[0.3em] text-neutral-600">About</span>
+            <span className="font-mono text-xs text-accent">01</span>
+            <span className="text-xs font-mono uppercase tracking-[0.3em] text-ink-dim">About</span>
           </div>
-          <div className="h-px flex-1 max-w-xs bg-gradient-to-r from-black/20 to-transparent" />
+          <div className="h-px flex-1 max-w-xs bg-gradient-to-r from-white/25 to-transparent" />
         </div>
 
         <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-16 lg:gap-24 items-start">
@@ -35,9 +34,9 @@ export const About = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-80px' }}
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
-              className="font-display text-5xl md:text-7xl leading-[1.02] tracking-[-0.02em] text-neutral-900 mb-12"
+              className="font-display text-5xl md:text-7xl leading-[1.02] tracking-[-0.02em] text-ink mb-12"
             >
-              A bit about <span className="text-[#135029]">me</span>.
+              A bit about <span className="text-accent">me</span>.
             </motion.h2>
 
             <motion.div
@@ -45,7 +44,7 @@ export const About = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.15, duration: 0.8 }}
-              className="space-y-6 text-lg font-light text-neutral-700 leading-relaxed max-w-xl"
+              className="space-y-6 text-lg font-light text-ink-dim leading-relaxed max-w-xl"
             >
               <p>
                 I'm Arnav, a Computer Science student at UC Davis with a minor in Business
@@ -86,9 +85,9 @@ export const About = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ delay: 0.1, duration: 0.8 }}
-            className="lg:sticky lg:top-28 rounded-2xl border border-white/60 bg-white/35 backdrop-blur-xl p-8 shadow-[0_20px_60px_-40px_rgba(19,80,41,0.45)]"
+            className="lg:sticky lg:top-28 rounded-2xl neu p-8 shadow-[0_20px_60px_-40px_rgba(0,0,0,0.85)]"
           >
-            <span className="text-xs font-mono uppercase tracking-[0.3em] text-neutral-600">
+            <span className="text-xs font-mono uppercase tracking-[0.3em] text-ink-dim">
               At a glance
             </span>
 
@@ -96,18 +95,18 @@ export const About = () => {
               {facts.map((fact) => (
                 <div
                   key={fact.label}
-                  className="grid grid-cols-[7rem_1fr] gap-4 py-4 border-t border-black/[0.07] first:border-t-0 first:pt-0"
+                  className="grid grid-cols-[7rem_1fr] gap-4 py-4 border-t border-glass-line first:border-t-0 first:pt-0"
                 >
-                  <dt className="text-xs font-mono uppercase tracking-widest text-neutral-500 pt-1">
+                  <dt className="text-xs font-mono uppercase tracking-widest text-ink-faint pt-1">
                     {fact.label}
                   </dt>
-                  <dd className="text-neutral-800 font-light">{fact.value}</dd>
+                  <dd className="text-ink font-light">{fact.value}</dd>
                 </div>
               ))}
             </dl>
 
-            <div className="mt-8 pt-6 border-t border-black/[0.07]">
-              <span className="text-xs font-mono uppercase tracking-widest text-neutral-500 block mb-4">
+            <div className="mt-8 pt-6 border-t border-glass-line">
+              <span className="text-xs font-mono uppercase tracking-widest text-ink-faint block mb-4">
                 Coursework
               </span>
               <div className="flex flex-wrap gap-2">
@@ -120,7 +119,7 @@ export const About = () => {
                 ].map((course) => (
                   <span
                     key={course}
-                    className="px-3 py-1.5 rounded-full border border-black/[0.07] bg-white/50 text-xs text-neutral-700"
+                    className="px-3 py-1.5 rounded-full glass-pill text-xs text-ink-dim"
                   >
                     {course}
                   </span>

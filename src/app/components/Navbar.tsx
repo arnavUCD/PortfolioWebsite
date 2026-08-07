@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
   motion,
   AnimatePresence,
@@ -10,10 +10,11 @@ import {
 } from 'motion/react';
 import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
+import { site, mailto } from '../data/site';
 
 const navItems = [
   { name: 'About', to: '/#about' },
-  { name: 'Projects', to: '/work' },
+  { name: 'Projects', to: '/#work' },
   { name: 'Experience', to: '/#experience' },
   { name: 'Contact', to: '/#contact' }
 ];
@@ -71,11 +72,11 @@ export const Navbar = () => {
     setIsOpen(false);
   }, [location]);
 
-  const activeName = navItems.find((item) =>
-    item.to.startsWith('/#')
-      ? location.hash === item.to.slice(1)
-      : location.pathname.startsWith(item.to)
-  )?.name;
+  // The dedicated /work pages are a drill-down from the Projects section, so
+  // they keep that item lit rather than clearing the indicator entirely.
+  const activeName = location.pathname.startsWith('/work')
+    ? 'Projects'
+    : navItems.find((item) => location.hash === item.to.slice(1))?.name;
 
   return (
     <>
@@ -89,24 +90,24 @@ export const Navbar = () => {
           className={`shrink-0 ${docked ? 'pointer-events-auto' : 'pointer-events-none'}`}
         >
           <Link to="/" className="text-lg tracking-[0.2em] uppercase hover:opacity-60 transition-opacity">
-            Arnav<span className="text-neutral-500"> Sharma</span>
+            Arnav<span className="text-ink-faint"> Sharma</span>
           </Link>
         </motion.div>
 
         {/* Centred translucent pill */}
         <div
-          className="hidden md:flex absolute left-1/2 -translate-x-1/2 pointer-events-auto"
+          className="hidden lg:flex absolute left-1/2 -translate-x-1/2 pointer-events-auto"
           onMouseLeave={() => setHovered(null)}
         >
           <motion.div
             animate={{
-              backgroundColor: docked ? 'rgba(255,255,255,0.55)' : 'rgba(255,255,255,0.35)',
+              backgroundColor: docked ? 'rgba(255,255,255,0.075)' : 'rgba(255,255,255,0.04)',
               boxShadow: docked
-                ? '0 8px 30px -12px rgba(0,0,0,0.20)'
-                : '0 8px 30px -14px rgba(0,0,0,0.10)'
+                ? '0 10px 34px -12px rgba(0,0,0,0.75)'
+                : '0 10px 34px -16px rgba(0,0,0,0.5)'
             }}
             transition={{ duration: 0.4 }}
-            className="flex items-center gap-1 p-1.5 rounded-full border border-white/50 backdrop-blur-xl"
+            className="flex items-center gap-1 p-1.5 rounded-full border border-glass-line"
           >
             {navItems.map((item) => {
               const isActive = activeName === item.name;
@@ -121,18 +122,18 @@ export const Navbar = () => {
                     <motion.span
                       layoutId="nav-pill"
                       transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-                      className="absolute inset-0 rounded-full bg-white/75 shadow-[inset_0_1px_0_rgba(255,255,255,0.9)]"
+                      className="absolute inset-0 rounded-full bg-white/[0.09] shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]"
                     />
                   )}
                   <span
                     className={`relative z-10 transition-colors duration-300 ${
-                      isActive || hovered === item.name ? 'text-neutral-900' : 'text-neutral-600'
+                      isActive || hovered === item.name ? 'text-ink' : 'text-ink-dim'
                     }`}
                   >
                     {item.name}
                   </span>
                   {isActive && (
-                    <span className="absolute left-1/2 -translate-x-1/2 bottom-1 w-1 h-1 rounded-full bg-[#135029]" />
+                    <span className="absolute left-1/2 -translate-x-1/2 bottom-1 w-1 h-1 rounded-full bg-accent" />
                   )}
                 </Link>
               );
@@ -140,24 +141,36 @@ export const Navbar = () => {
           </motion.div>
         </div>
 
-        {/* Right-hand action */}
-        <motion.a
-          href="mailto:arnsharma@ucdavis.edu"
+        {/* Right-hand actions */}
+        <motion.div
           animate={{ opacity: docked ? 1 : 0, x: docked ? 0 : 8 }}
           transition={{ duration: 0.4, ease: 'easeOut' }}
-          className={`hidden md:inline-flex items-center gap-2 shrink-0 rounded-full border border-black/10 bg-white/40 backdrop-blur-md px-5 py-2.5 text-sm text-neutral-700 hover:bg-[#135029] hover:text-white hover:border-neutral-900 transition-colors ${
+          className={`hidden lg:flex items-center gap-4 shrink-0 ${
             docked ? 'pointer-events-auto' : 'pointer-events-none'
           }`}
         >
-          Email me
-          <ArrowUpRight className="w-4 h-4" />
-        </motion.a>
+          <a
+            href={site.resume}
+            target="_blank"
+            rel="noreferrer"
+            className="text-sm text-ink-dim hover:text-ink transition-colors"
+          >
+            Résumé
+          </a>
+          <a
+            href={mailto}
+            className="inline-flex items-center gap-2 rounded-full glass-pill px-5 py-2.5 text-sm text-ink-dim hover:bg-accent hover:text-surface hover:border-accent transition-colors"
+          >
+            Email me
+            <ArrowUpRight className="w-4 h-4" />
+          </a>
+        </motion.div>
 
         {/* Mobile toggle */}
         <button
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
-          className="md:hidden pointer-events-auto ml-auto z-50 w-11 h-11 rounded-full border border-black/10 bg-white/50 backdrop-blur-md flex items-center justify-center text-neutral-900"
+          className="lg:hidden pointer-events-auto ml-auto z-50 w-11 h-11 rounded-full glass-pill flex items-center justify-center text-ink"
         >
           {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
@@ -173,7 +186,7 @@ export const Navbar = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
             transition={{ type: 'tween', duration: 0.4 }}
-            className="fixed inset-0 pointer-events-auto bg-[#f7e7ce]/95 backdrop-blur-xl flex flex-col items-center justify-center gap-6 md:hidden"
+            className="fixed inset-0 pointer-events-auto bg-surface/95 backdrop-blur-xl flex flex-col items-center justify-center gap-6 lg:hidden"
           >
             {navItems.map((item, i) => (
               <motion.div
@@ -184,17 +197,28 @@ export const Navbar = () => {
               >
                 <Link
                   to={item.to}
-                  className="px-8 py-3 rounded-full border border-black/[0.07] bg-white/50 text-3xl tracking-tight hover:bg-white transition-colors block"
+                  className="px-8 py-3 rounded-full glass-pill text-3xl tracking-tight transition-colors block hover:border-accent/40"
                 >
                   {item.name}
                 </Link>
               </motion.div>
             ))}
-            <a
-              href="mailto:arnsharma@ucdavis.edu"
-              className="mt-4 text-sm font-mono tracking-widest uppercase text-neutral-600"
+            <motion.a
+              href={site.resume}
+              target="_blank"
+              rel="noreferrer"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.1 + navItems.length * 0.06 }}
+              className="px-8 py-3 rounded-full glass-pill text-3xl tracking-tight transition-colors hover:border-accent/40"
             >
-              arnsharma@ucdavis.edu
+              Résumé
+            </motion.a>
+            <a
+              href={mailto}
+              className="mt-4 text-sm font-mono tracking-widest uppercase text-ink-dim"
+            >
+              {site.email}
             </a>
           </motion.div>
         )}

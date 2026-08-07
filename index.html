@@ -1,22 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-  <!DOCTYPE html>
-  <html lang="en">
-    <head>
-      
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>arnavsharma</title>
-      <meta name="description" content="This web application offers an immersive user experience with a visually stunning interface, allowing users to easily navigate and submit forms seamlessly." />
-      <meta name="robots" content="noindex, nofollow" />
-      <style>html, body { height: 100%; margin: 0; } #root { height: 100%; }</style>
-      
-    </head>
+    <title>Arnav Sharma — Computer Science, UC Davis</title>
+    <meta
+      name="description"
+      content="Arnav Sharma — Computer Science student at UC Davis working on applied machine learning, signal processing, and systems. Selected projects, experience, and contact."
+    />
+    <meta name="author" content="Arnav Sharma" />
+    <meta name="theme-color" content="#121211" />
+    <link rel="canonical" href="https://arnavucd.github.io/PortfolioWebsite/" />
 
-    <body>
-      
-      <div id="root"></div>
-      <script type="module" src="/src/main.tsx"></script>
-      
-    </body>
-  </html>
-  
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content="Arnav Sharma — Computer Science, UC Davis" />
+    <meta
+      property="og:description"
+      content="Applied machine learning, signal processing, and systems. Selected projects, experience, and contact."
+    />
+    <meta property="og:url" content="https://arnavucd.github.io/PortfolioWebsite/" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+    <style>
+      html,
+      body {
+        min-height: 100%;
+        margin: 0;
+        /* Painted before the stylesheet arrives, so the first frame is not white */
+        background-color: #121211;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
+</html>

@@ -1,222 +1,268 @@
-@custom-variant dark (&:is(.dark *));
-
+/* ─────────────────────────────────────────────
+   Design tokens
+   ───────────────────────────────────────────── */
 :root {
   --font-size: 16px;
-  --background: #ffffff;
-  --foreground: oklch(0.145 0 0);
-  --card: #ffffff;
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: #030213;
-  --primary-foreground: oklch(1 0 0);
-  --secondary: oklch(0.95 0.0058 264.53);
-  --secondary-foreground: #030213;
-  --muted: #ececf0;
-  --muted-foreground: #717182;
-  --accent: #e9ebef;
-  --accent-foreground: #030213;
-  --destructive: #d4183d;
-  --destructive-foreground: #ffffff;
-  --border: rgba(0, 0, 0, 0.1);
-  --input: transparent;
-  --input-background: #f3f3f5;
-  --switch-background: #cbced4;
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.646 0.222 41.116);
-  --chart-2: oklch(0.6 0.118 184.704);
-  --chart-3: oklch(0.398 0.07 227.392);
-  --chart-4: oklch(0.828 0.189 84.429);
-  --chart-5: oklch(0.769 0.188 70.08);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: #030213;
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
-}
 
-.dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.145 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.145 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.985 0 0);
-  --primary-foreground: oklch(0.205 0 0);
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: oklch(0.269 0 0);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.396 0.141 25.723);
-  --destructive-foreground: oklch(0.637 0.237 25.331);
-  --border: oklch(0.269 0 0);
-  --input: oklch(0.269 0 0);
-  --ring: oklch(0.439 0 0);
-  --font-weight-medium: 500;
-  --font-weight-normal: 400;
-  --chart-1: oklch(0.488 0.243 264.376);
-  --chart-2: oklch(0.696 0.17 162.48);
-  --chart-3: oklch(0.769 0.188 70.08);
-  --chart-4: oklch(0.627 0.265 303.9);
-  --chart-5: oklch(0.645 0.246 16.439);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.269 0 0);
-  --sidebar-ring: oklch(0.439 0 0);
+  /* Page surface — warm charcoal, near-black, never pure grey */
+  --surface: #121211;
+  --surface-high: #1a1a18;
+  --surface-low: #0c0c0b;
+  --surface-warm: #2a2620;
+
+  /* Neumorphic surfaces — opaque, and only a step away from the page itself.
+     Push these much lighter and the extruded illusion collapses into "grey box
+     on dark page", which is the usual way dark neumorphism goes wrong. */
+  --raised: #191917;
+  --raised-high: #1f1f1c;
+
+  /* Frosted panels. Everything raised off the surface is white at low alpha,
+     which is what keeps the glass reading as glass over any backdrop. */
+  --glass: rgba(255, 255, 255, 0.055);
+  --glass-strong: rgba(255, 255, 255, 0.1);
+  --glass-line: rgba(255, 255, 255, 0.11);
+  --glass-line-strong: rgba(255, 255, 255, 0.18);
+
+  /* The one accent — pale mint. Light, so anything sitting ON it takes
+     --surface for its text colour, never white. */
+  --accent: #bedcce;
+  --accent-strong: #d8ece3;
+
+  /* Text ramp */
+  --ink: #f1f0ec;
+  --ink-dim: #a7a5a0;
+  --ink-faint: #78766f;
+
+  /* Hairline rules */
+  --rule: rgba(255, 255, 255, 0.1);
+  --rule-soft: rgba(255, 255, 255, 0.045);
+
+  /* Defaults for unqualified borders and focus rings */
+  --border: rgba(255, 255, 255, 0.11);
+  --ring: rgba(190, 220, 206, 0.5);
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--card-foreground);
-  --color-popover: var(--popover);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--secondary);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
+  --color-surface: var(--surface);
+  --color-surface-high: var(--surface-high);
+  --color-raised: var(--raised);
+  --color-glass: var(--glass);
+  --color-glass-strong: var(--glass-strong);
+  --color-glass-line: var(--glass-line);
   --color-accent: var(--accent);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-destructive: var(--destructive);
-  --color-destructive-foreground: var(--destructive-foreground);
+  --color-accent-strong: var(--accent-strong);
+  --color-ink: var(--ink);
+  --color-ink-dim: var(--ink-dim);
+  --color-ink-faint: var(--ink-faint);
   --color-border: var(--border);
-  --color-input: var(--input);
-  --color-input-background: var(--input-background);
-  --color-switch-background: var(--switch-background);
   --color-ring: var(--ring);
-  --color-chart-1: var(--chart-1);
-  --color-chart-2: var(--chart-2);
-  --color-chart-3: var(--chart-3);
-  --color-chart-4: var(--chart-4);
-  --color-chart-5: var(--chart-5);
-  --radius-sm: calc(var(--radius) - 4px);
-  --radius-md: calc(var(--radius) - 2px);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) + 4px);
-  --color-sidebar: var(--sidebar);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-ring: var(--sidebar-ring);
+
+  --font-sans: 'Inter Tight', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
+/* ─────────────────────────────────────────────
+   Base
+   ───────────────────────────────────────────── */
 @layer base {
+  /* Tailwind v4 defaults bare `border` to currentColor; keep it a hairline. */
   * {
     @apply border-border outline-ring/50;
   }
 
+  html {
+    font-size: var(--font-size);
+  }
+
+  html,
   body {
-    @apply bg-background text-foreground;
+    background-color: var(--surface);
+  }
+
+  body {
+    color: var(--ink);
+    font-family: var(--font-sans);
+    font-feature-settings: 'ss01', 'cv05';
+    letter-spacing: -0.011em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
 }
 
-/**
- * Base typography. This is not applied to elements which have an ancestor with a Tailwind text class.
- */
-@layer base {
-  :where(:not(:has([class*=' text-']), :not(:has([class^='text-'])))) {
-    h1 {
-      font-size: var(--text-2xl);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
+/* ─────────────────────────────────────────────
+   Type
+   ───────────────────────────────────────────── */
 
-    h2 {
-      font-size: var(--text-xl);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    h3 {
-      font-size: var(--text-lg);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    h4 {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    p {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-normal);
-      line-height: 1.5;
-    }
-
-    label {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    button {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-medium);
-      line-height: 1.5;
-    }
-
-    input {
-      font-size: var(--text-base);
-      font-weight: var(--font-weight-normal);
-      line-height: 1.5;
-    }
-  }
+/* Display face — hero wordmark and section headings. Tight sans, set heavy and
+   negatively tracked, so large sizes read as one solid mass. */
+.font-display {
+  font-family: var(--font-sans);
+  font-weight: 600;
+  letter-spacing: -0.04em;
 }
 
-html {
-  font-size: var(--font-size);
+/* Frosted panel — the one raised surface used across the site.
+   Frost comes from the backdrop blur; gloss comes from the diagonal sheen laid
+   over it plus a bright hairline along the top edge. Both are needed: blur
+   alone reads as matte plastic, sheen alone reads as flat paint. */
+.glass {
+  background-image:
+    linear-gradient(
+      152deg,
+      rgba(255, 255, 255, 0.11) 0%,
+      rgba(255, 255, 255, 0.04) 34%,
+      rgba(255, 255, 255, 0) 58%
+    ),
+    linear-gradient(var(--glass), var(--glass));
+  border: 1px solid var(--glass-line);
+  backdrop-filter: blur(24px) saturate(165%);
+  -webkit-backdrop-filter: blur(24px) saturate(165%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.15),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.03),
+    0 30px 80px -52px rgba(0, 0, 0, 0.95);
+}
+
+/* Hovered or selected: the sheen strengthens rather than the fill flattening */
+.glass-raised {
+  background-image:
+    linear-gradient(
+      152deg,
+      rgba(255, 255, 255, 0.17) 0%,
+      rgba(255, 255, 255, 0.06) 34%,
+      rgba(255, 255, 255, 0.01) 58%
+    ),
+    linear-gradient(var(--glass-strong), var(--glass-strong));
+  border-color: var(--glass-line-strong);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+    0 30px 80px -46px rgba(0, 0, 0, 0.95);
 }
 
 /* ─────────────────────────────────────────────
-   Page surface — a single continuous "paper"
+   Neumorphic surfaces
+   ─────────────────────────────────────────────
+   Unlike the glass, these are opaque and the same family as the page. The form
+   comes entirely from a matched pair of shadows — light from the top-left, dark
+   from the bottom-right — so the card reads as extruded from the background
+   rather than floating over it. The light shadow has to stay very faint on a
+   dark surface, or the whole thing turns grey. */
+.neu {
+  background-color: var(--raised);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  box-shadow:
+    -16px -16px 36px rgba(255, 255, 255, 0.042),
+    22px 26px 54px rgba(0, 0, 0, 0.72),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+}
+
+/* Pulled much further out — for hover and selected states. The offsets grow
+   together with the blur, which is what makes it read as rising rather than
+   simply gaining a darker shadow. */
+.neu-raised {
+  background-color: var(--raised-high);
+  border-color: rgba(255, 255, 255, 0.07);
+  box-shadow:
+    -22px -22px 48px rgba(255, 255, 255, 0.06),
+    30px 34px 70px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.45);
+}
+
+/* Maximum extrusion, for the one element that should read as standing off the
+   page. Offset, blur and spread all scale together — raising only the blur
+   gives haze, and raising only the offset gives a hard drop shadow. */
+.neu-pop {
+  background-color: var(--raised-high);
+  border-color: rgba(255, 255, 255, 0.08);
+  box-shadow:
+    -28px -28px 60px rgba(255, 255, 255, 0.055),
+    40px 46px 90px -10px rgba(0, 0, 0, 0.88),
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+}
+
+/* Pressed into the surface — the shadows swap sides and move inside */
+.neu-inset {
+  background-color: var(--surface);
+  border-color: rgba(255, 255, 255, 0.02);
+  box-shadow:
+    inset 6px 7px 16px rgba(0, 0, 0, 0.6),
+    inset -6px -7px 16px rgba(255, 255, 255, 0.03);
+}
+
+/* Skill pills, extruded from the page at small scale. Offsets are kept tight —
+   a pill is a small object, and large offsets on something 36px tall reads as a
+   drop shadow rather than a moulded surface. */
+.neu-pill {
+  background-color: var(--raised);
+  border: 1px solid rgba(255, 255, 255, 0.035);
+  box-shadow:
+    -6px -6px 14px rgba(255, 255, 255, 0.035),
+    8px 9px 20px rgba(0, 0, 0, 0.66),
+    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+}
+
+/* Lit: rises off the surface and picks up the accent, without becoming a
+   coloured chip — the mint reads as light falling on it, not as a fill. */
+.neu-pill-on {
+  background-color: var(--raised-high);
+  border-color: rgba(190, 220, 206, 0.3);
+  box-shadow:
+    -10px -10px 24px rgba(255, 255, 255, 0.06),
+    13px 15px 34px rgba(0, 0, 0, 0.8),
+    inset 0 1px 0 rgba(255, 255, 255, 0.11),
+    0 0 30px -8px rgba(190, 220, 206, 0.42);
+}
+
+/* Pills carry the same material at small scale — lighter sheen, tighter blur */
+.glass-pill {
+  background-image:
+    linear-gradient(
+      150deg,
+      rgba(255, 255, 255, 0.13) 0%,
+      rgba(255, 255, 255, 0.045) 46%,
+      rgba(255, 255, 255, 0) 100%
+    ),
+    linear-gradient(var(--glass), var(--glass));
+  border: 1px solid var(--glass-line);
+  backdrop-filter: blur(14px) saturate(150%);
+  -webkit-backdrop-filter: blur(14px) saturate(150%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.13);
+}
+
+/* Small mono labels read better without ligatures */
+.font-mono {
+  font-variant-ligatures: none;
+}
+
+/* ─────────────────────────────────────────────
+   Surface texture
    ───────────────────────────────────────────── */
-:root {
-  --paper: #f7e7ce;
-  --paper-high: #fdf4e4;
-  --paper-low: #eed9b4;
-  --paper-warm: #f6ddb8;
-  --accent-ink: #135029;
-  --rule: rgba(19, 80, 41, 0.12);
-  --rule-soft: rgba(19, 80, 41, 0.07);
-}
 
-html,
-body {
-  background-color: var(--paper);
-}
-
-/* Fine paper grain — keeps flat fills from reading as digital gradients */
+/* Fine grain — keeps flat fills from reading as digital gradients. Kept much
+   lighter than on a pale surface, where noise on near-black turns to static. */
 .grain::after {
   content: '';
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.32;
+  opacity: 0.14;
   mix-blend-mode: soft-light;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Heavier grain, used over the cursor-reactive hero field */
+.grain-strong::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.24;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 
 /* Hairline column rules, aligned to the content container */
@@ -230,42 +276,66 @@ body {
   box-shadow: inset 0 1px 0 var(--rule);
 }
 
+/* Anchor targets stop clear of the docked navbar rather than under it */
+:is(#about, #work, #experience, #contact) {
+  scroll-margin-top: 5rem;
+}
+
 /* ─────────────────────────────────────────────
-   Type
+   Skill ticker
    ───────────────────────────────────────────── */
-@theme inline {
-  --font-sans: 'Inter Tight', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
-  --font-serif: 'Instrument Serif', ui-serif, Georgia, serif;
+
+/* Full-bleed rows that fade out before they reach either edge */
+.marquee {
+  overflow: hidden;
+  -webkit-mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8rem,
+    #000 calc(100% - 8rem),
+    transparent
+  );
+  mask-image: linear-gradient(
+    to right,
+    transparent,
+    #000 8rem,
+    #000 calc(100% - 8rem),
+    transparent
+  );
 }
 
-body {
-  font-family: 'Inter Tight', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  font-feature-settings: 'ss01', 'cv05';
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  letter-spacing: -0.011em;
+/* Travels left to right by exactly one copy of the track's repeated content */
+@keyframes marquee-drift {
+  from {
+    transform: translate3d(calc(-1 * var(--marquee-shift, 25%)), 0, 0);
+  }
+  to {
+    transform: translate3d(0, 0, 0);
+  }
 }
 
-/* Display serif — hero wordmark and section headings */
-.font-display {
-  font-family: 'Instrument Serif', ui-serif, Georgia, serif;
-  font-weight: 400;
-  letter-spacing: -0.005em;
+.marquee-track {
+  display: flex;
+  width: max-content;
+  will-change: transform;
+  animation: marquee-drift var(--marquee-duration, 60s) linear infinite;
 }
 
-/* Small mono labels read better with a touch of extra weight */
-.font-mono {
-  font-variant-ligatures: none;
+/* Hold a row still so a name can actually be read */
+.marquee:hover .marquee-track {
+  animation-play-state: paused;
 }
 
-/* Heavier grain, used over the cursor-reactive hero field */
-.grain-strong::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.55;
-  mix-blend-mode: overlay;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
+/* ─────────────────────────────────────────────
+   Motion
+   ───────────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
