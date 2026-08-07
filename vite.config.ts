@@ -6,7 +6,7 @@ import react from '@vitejs/plugin-react';
 // The site is served from https://arnavucd.github.io/PortfolioWebsite/, so
 // production assets need the repo name as their base. Dev stays at the root.
 export default defineConfig(({ mode }) => ({
-  base: mode === 'production' ? '/PortfolioWebsite/' : '/',
+  base: mode ='/',
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
