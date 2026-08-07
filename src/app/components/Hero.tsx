@@ -42,9 +42,7 @@ export const Hero = () => {
         animate={{ opacity: 1 }}
         transition={{ delay: 1, duration: 1 }}
         className="absolute bottom-10 right-8 hidden md:block text-lg text-ink-dim"
-      >
-        Built with care
-      </motion.span>
+      />
 
       {/* Scroll cue */}
       <motion.div
