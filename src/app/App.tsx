@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { HashRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Hero } from './components/Hero';
@@ -35,27 +35,39 @@ const Preloader = () => (
   </motion.div>
 );
 
+type NavState = { scrollTo?: string } | null;
+
 /**
- * Restores scroll on route change, and honours `/#section` links — including
- * when the target section belongs to a route that has not painted yet.
+ * Restores scroll on route change, and honours a section handoff passed via
+ * router *state* — never the URL. `HashRouter` already stores the route in
+ * the URL fragment, so a second, nested `#section` inside it (the old
+ * `to="/#about"` scheme) produced a malformed address-bar value; state
+ * sidesteps that entirely, since it never touches the URL.
  */
 const ScrollToTop = () => {
-  const { pathname, hash, key } = useLocation();
+  const location = useLocation();
+  const { pathname, key } = location;
+  const scrollTo = (location.state as NavState)?.scrollTo;
+
+  // Guards against re-scrolling if this location is revisited (e.g. the user
+  // navigates elsewhere and back) without a fresh section request.
+  const consumedKey = useRef<string | null>(null);
 
   useEffect(() => {
-    if (!hash) {
-      window.scrollTo(0, 0);
+    if (!scrollTo || consumedKey.current === key) {
+      if (!scrollTo) window.scrollTo(0, 0);
       return;
     }
+    consumedKey.current = key;
 
     let attempts = 0;
     let timer = 0;
 
     const tryScroll = () => {
-      const el = document.querySelector(hash);
+      const el = document.getElementById(scrollTo);
 
-      // The anchor may belong to a route that has not painted yet. Timers are
-      // used rather than rAF so this still resolves in a background tab.
+      // The section may belong to a route that has not painted yet. Timers
+      // are used rather than rAF so this still resolves in a background tab.
       if (!el) {
         if (attempts++ < 20) timer = window.setTimeout(tryScroll, 50);
         return;
@@ -73,7 +85,7 @@ const ScrollToTop = () => {
 
     tryScroll();
     return () => clearTimeout(timer);
-  }, [pathname, hash, key]);
+  }, [pathname, scrollTo, key]);
 
   return null;
 };

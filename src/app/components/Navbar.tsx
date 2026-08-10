@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, type AnchorHTMLAttributes } from 'react';
 import {
   motion,
   AnimatePresence,
@@ -11,13 +11,42 @@ import {
 import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { site, mailto } from '../data/site';
+import { useSectionLink } from '../hooks/useSectionLink';
 
 const navItems = [
-  { name: 'About', to: '/#about' },
-  { name: 'Projects', to: '/#work' },
-  { name: 'Experience', to: '/#experience' },
-  { name: 'Contact', to: '/#contact' }
+  { name: 'About', id: 'about' },
+  { name: 'Projects', id: 'work' },
+  { name: 'Experience', id: 'experience' },
+  { name: 'Contact', id: 'contact' }
 ];
+
+/**
+ * A section anchor that scrolls directly (or hands off through router state
+ * from another route) instead of going through a `Link`'s `to` prop — see
+ * useSectionLink for why that matters under HashRouter.
+ */
+const SectionAnchor = ({
+  id,
+  className,
+  children,
+  onClick: onClickProp,
+  ...rest
+}: AnchorHTMLAttributes<HTMLAnchorElement> & { id: string }) => {
+  const scrollToSection = useSectionLink(id);
+  return (
+    <a
+      href={`#${id}`}
+      onClick={(e) => {
+        scrollToSection(e);
+        onClickProp?.(e);
+      }}
+      className={className}
+      {...rest}
+    >
+      {children}
+    </a>
+  );
+};
 
 /** Resting offset from the top of the viewport once the nav has docked. */
 const DOCKED_Y = 14;
@@ -73,10 +102,10 @@ export const Navbar = () => {
   }, [location]);
 
   // The dedicated /work pages are a drill-down from the Projects section, so
-  // they keep that item lit rather than clearing the indicator entirely.
-  const activeName = location.pathname.startsWith('/work')
-    ? 'Projects'
-    : navItems.find((item) => location.hash === item.to.slice(1))?.name;
+  // they keep that item lit. There's no live scroll-spy for the other
+  // sections — the URL no longer carries which one you're viewing (see
+  // useSectionLink), so nothing to match against once you're back on `/`.
+  const activeName = location.pathname.startsWith('/work') ? 'Projects' : undefined;
 
   return (
     <>
@@ -112,9 +141,9 @@ export const Navbar = () => {
             {navItems.map((item) => {
               const isActive = activeName === item.name;
               return (
-                <Link
+                <SectionAnchor
                   key={item.name}
-                  to={item.to}
+                  id={item.id}
                   onMouseEnter={() => setHovered(item.name)}
                   className="relative px-5 py-2 rounded-full text-sm tracking-wide"
                 >
@@ -135,7 +164,7 @@ export const Navbar = () => {
                   {isActive && (
                     <span className="absolute left-1/2 -translate-x-1/2 bottom-1 w-1 h-1 rounded-full bg-accent" />
                   )}
-                </Link>
+                </SectionAnchor>
               );
             })}
           </motion.div>
@@ -195,12 +224,13 @@ export const Navbar = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: 0.1 + i * 0.06 }}
               >
-                <Link
-                  to={item.to}
+                <SectionAnchor
+                  id={item.id}
+                  onClick={() => setIsOpen(false)}
                   className="px-8 py-3 rounded-full glass-pill text-3xl tracking-tight transition-colors block hover:border-accent/40"
                 >
                   {item.name}
-                </Link>
+                </SectionAnchor>
               </motion.div>
             ))}
             <motion.a

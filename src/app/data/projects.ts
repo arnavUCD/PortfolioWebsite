@@ -1,5 +1,5 @@
 /** Which animated demo renders in the project's live panel. */
-export type DemoKey = 'ecg' | 'grid' | 'nlp';
+export type DemoKey = 'recon' | 'ecg' | 'grid' | 'nlp';
 
 export type Metric = {
   label: string;
@@ -28,6 +28,43 @@ export type Project = {
 };
 
 export const projects: Project[] = [
+  {
+    id: 'verity-ai',
+    slug: 'verity-ai',
+    demo: 'recon',
+    title: 'Verity AI',
+    category: 'Agentic AI / Fintech',
+    year: '2026',
+    tagline: 'An AI finance agent that knows exactly when not to act on its own.',
+    stack: [
+      'Python',
+      'FastAPI',
+      'LangGraph',
+      'PostgreSQL',
+      'MCP',
+      'Plaid',
+      'Zoho Books',
+      'Gemini',
+      'Docker'
+    ],
+    metrics: [
+      { label: 'Unsafe auto-posts', value: '0', note: 'across a live bank run' },
+      { label: 'Self-approval blocks', value: '3×', note: 'agent, API, database' },
+      { label: 'Credit issuance', value: 'Exactly once', note: 'crash-injected tests' },
+      { label: 'Infrastructure', value: 'Live', note: 'real bank, real books' }
+    ],
+    client: 'Independent',
+    role: 'LangGraph, FastAPI, PostgreSQL RLS, Plaid, Zoho Books',
+    description:
+      'An agentic finance system that reads bank transactions and invoices, reasons about what to do, and defers to a human for everything it is not certain about. Built and run end to end against real infrastructure — a linked bank account through Plaid, a live Zoho Books organisation, and a real LLM — rather than simulated data.',
+    highlights: [
+      'Enforced a single rule that makes unattended action safe — existence is not attribution. The agent posts automatically only when a transaction carries a genuine structured invoice reference resolving to exactly one open invoice; a coincidental name match or multiple plausible candidates route to a human instead of being guessed at.',
+      'Made agent self-approval structurally impossible at three independent levels: the agent’s tool surface has no approve capability, the API checks the caller’s role, and the database re-derives the approver’s identity and rejects self-approval even for a legitimate approver.',
+      'Achieved exactly-once credit issuance internally with a transactional outbox and idempotency keys, proven under tests that deliberately inject crashes mid-transaction and concurrent retries.',
+      'Designed at-most-once write-back to Zoho honestly rather than overclaiming a guarantee an external API cannot give: deterministic reference tags, a reconciliation check before every write, and a background sweep for duplicates — adversarially tested against the write-succeeds-but-local-record-fails case that causes real double-payments.',
+      'Isolated tenants with PostgreSQL Row-Level Security verified against active spoofing, and marked every automated decision in the audit trail with a database rule that makes it impossible to disguise as a human approval.'
+    ]
+  },
   {
     id: 'cardiosense',
     slug: 'cardiosense',
