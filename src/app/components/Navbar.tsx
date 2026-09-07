@@ -130,7 +130,7 @@ export const Navbar = () => {
         >
           <motion.div
             animate={{
-              backgroundColor: docked ? 'rgba(255,255,255,0.075)' : 'rgba(255,255,255,0.04)',
+              backgroundColor: docked ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.5)',
               boxShadow: docked
                 ? '0 10px 34px -12px rgba(0,0,0,0.75)'
                 : '0 10px 34px -16px rgba(0,0,0,0.5)'
@@ -151,7 +151,7 @@ export const Navbar = () => {
                     <motion.span
                       layoutId="nav-pill"
                       transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-                      className="absolute inset-0 rounded-full bg-white/[0.09] shadow-[inset_0_1px_0_rgba(255,255,255,0.18)]"
+                      className="absolute inset-0 rounded-full bg-black/[0.05] shadow-[inset_0_1px_0_rgba(255,255,255,0.95)]"
                     />
                   )}
                   <span
@@ -246,7 +246,7 @@ export const Navbar = () => {
             </motion.a>
             <a
               href={mailto}
-              className="mt-4 text-sm font-mono tracking-widest uppercase text-ink-dim"
+              className="mt-4 text-sm tracking-widest uppercase text-ink-dim"
             >
               {site.email}
             </a>

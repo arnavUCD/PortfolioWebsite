@@ -4,42 +4,55 @@
 :root {
   --font-size: 16px;
 
-  /* Page surface — warm charcoal, near-black, never pure grey */
-  --surface: #121211;
-  --surface-high: #1a1a18;
-  --surface-low: #0c0c0b;
-  --surface-warm: #2a2620;
+  /* Page surface — white, carrying only a whisper of beige */
+  --surface: #fcfbf8;
+  --surface-high: #ffffff;
+  --surface-low: #f4f1e9;
+  --surface-warm: #f7efdf;
 
-  /* Neumorphic surfaces — opaque, and only a step away from the page itself.
-     Push these much lighter and the extruded illusion collapses into "grey box
-     on dark page", which is the usual way dark neumorphism goes wrong. */
-  --raised: #191917;
-  --raised-high: #1f1f1c;
+  /* Neumorphic surfaces — a half-step brighter than the page, so the shadow
+     pair does the sculpting rather than a change of fill. */
+  --raised: #fefdfb;
+  --raised-high: #ffffff;
 
-  /* Frosted panels. Everything raised off the surface is white at low alpha,
-     which is what keeps the glass reading as glass over any backdrop. */
-  --glass: rgba(255, 255, 255, 0.055);
-  --glass-strong: rgba(255, 255, 255, 0.1);
-  --glass-line: rgba(255, 255, 255, 0.11);
-  --glass-line-strong: rgba(255, 255, 255, 0.18);
+  /* Frosted panels. On a light page the fill is white at high alpha and the
+     hairline comes from ink, not from light — the reverse of the dark build. */
+  --glass: rgba(255, 255, 255, 0.6);
+  --glass-strong: rgba(255, 255, 255, 0.88);
+  --glass-line: rgba(0, 0, 0, 0.075);
+  --glass-line-strong: rgba(0, 0, 0, 0.13);
 
-  /* The one accent — pale mint. Light, so anything sitting ON it takes
-     --surface for its text colour, never white. */
-  --accent: #bedcce;
-  --accent-strong: #d8ece3;
+  /* The neumorphic light pair, as tokens so the material rules never hardcode
+     a direction of light. On a light surface the highlight is near-white and
+     the shadow is a desaturated beige-grey; pure black here reads as a drop
+     shadow stuck under a card rather than a moulded surface. */
+  --neu-light: rgba(255, 255, 255, 1);
+  --neu-dark: rgba(176, 168, 150, 0.36);
+  --neu-edge: rgba(255, 255, 255, 0.9);
+  --neu-edge-low: rgba(0, 0, 0, 0.03);
+
+  /* The one accent — deep turquoise. It has to carry as text down to 10px mono
+     labels, which rules out bright turquoise entirely (~1.4:1 on white); this
+     lands near 4.8:1. Kept dark so anything sitting ON it still takes
+     --surface for its text colour.
+     --accent-rgb is the same colour as bare channels, so every tint and glow
+     derives from one place instead of hardcoding the hue. */
+  --accent: #0e7c86;
+  --accent-strong: #0a5f68;
+  --accent-rgb: 14 124 134;
 
   /* Text ramp */
-  --ink: #f1f0ec;
-  --ink-dim: #a7a5a0;
-  --ink-faint: #78766f;
+  --ink: #17181a;
+  --ink-dim: #53565c;
+  --ink-faint: #797d84;
 
   /* Hairline rules */
-  --rule: rgba(255, 255, 255, 0.1);
-  --rule-soft: rgba(255, 255, 255, 0.045);
+  --rule: rgba(0, 0, 0, 0.09);
+  --rule-soft: rgba(0, 0, 0, 0.04);
 
   /* Defaults for unqualified borders and focus rings */
-  --border: rgba(255, 255, 255, 0.11);
-  --ring: rgba(190, 220, 206, 0.5);
+  --border: rgba(0, 0, 0, 0.09);
+  --ring: rgb(var(--accent-rgb) / 0.45);
 }
 
 @theme inline {
@@ -57,8 +70,9 @@
   --color-border: var(--border);
   --color-ring: var(--ring);
 
-  --font-sans: 'Inter Tight', ui-sans-serif, system-ui, -apple-system, sans-serif;
-  --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  /* Kept as a safety net: any stray `font-mono` still resolves to the one face. */
+  --font-mono: 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 
 /* ─────────────────────────────────────────────
@@ -77,6 +91,11 @@
   html,
   body {
     background-color: var(--surface);
+    /* The skill cloud settles its pills with physics, so one can briefly
+       overhang its field on load and flash a horizontal scrollbar. `clip`
+       rather than `hidden`: hidden would make this a scroll container and
+       break the `lg:sticky` panels in About and Projects. */
+    overflow-x: clip;
   }
 
   body {
@@ -98,7 +117,7 @@
 .font-display {
   font-family: var(--font-sans);
   font-weight: 600;
-  letter-spacing: -0.04em;
+  letter-spacing: -0.032em;
 }
 
 /* Frosted panel — the one raised surface used across the site.
@@ -109,18 +128,17 @@
   background-image:
     linear-gradient(
       152deg,
-      rgba(255, 255, 255, 0.11) 0%,
-      rgba(255, 255, 255, 0.04) 34%,
-      rgba(255, 255, 255, 0) 58%
+      rgba(255, 255, 255, 0.9) 0%,
+      rgba(255, 255, 255, 0.5) 34%,
+      rgba(255, 255, 255, 0.22) 58%
     ),
     linear-gradient(var(--glass), var(--glass));
   border: 1px solid var(--glass-line);
-  backdrop-filter: blur(24px) saturate(165%);
-  -webkit-backdrop-filter: blur(24px) saturate(165%);
+  backdrop-filter: blur(24px) saturate(135%);
+  -webkit-backdrop-filter: blur(24px) saturate(135%);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.15),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.03),
-    0 30px 80px -52px rgba(0, 0, 0, 0.95);
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 30px 80px -52px rgba(120, 108, 88, 0.55);
 }
 
 /* Hovered or selected: the sheen strengthens rather than the fill flattening */
@@ -128,16 +146,15 @@
   background-image:
     linear-gradient(
       152deg,
-      rgba(255, 255, 255, 0.17) 0%,
-      rgba(255, 255, 255, 0.06) 34%,
-      rgba(255, 255, 255, 0.01) 58%
+      rgba(255, 255, 255, 0.97) 0%,
+      rgba(255, 255, 255, 0.7) 34%,
+      rgba(255, 255, 255, 0.4) 58%
     ),
     linear-gradient(var(--glass-strong), var(--glass-strong));
   border-color: var(--glass-line-strong);
   box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.22),
-    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
-    0 30px 80px -46px rgba(0, 0, 0, 0.95);
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    0 30px 80px -46px rgba(120, 108, 88, 0.6);
 }
 
 /* ─────────────────────────────────────────────
@@ -146,16 +163,16 @@
    Unlike the glass, these are opaque and the same family as the page. The form
    comes entirely from a matched pair of shadows — light from the top-left, dark
    from the bottom-right — so the card reads as extruded from the background
-   rather than floating over it. The light shadow has to stay very faint on a
-   dark surface, or the whole thing turns grey. */
+   rather than floating over it. Both halves live in tokens (--neu-light /
+   --neu-dark) so flipping the theme never means re-deriving the light. */
 .neu {
   background-color: var(--raised);
-  border: 1px solid rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--neu-edge);
   box-shadow:
-    -16px -16px 36px rgba(255, 255, 255, 0.042),
-    22px 26px 54px rgba(0, 0, 0, 0.72),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.4);
+    -16px -16px 36px var(--neu-light),
+    22px 26px 54px var(--neu-dark),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 var(--neu-edge-low);
 }
 
 /* Pulled much further out — for hover and selected states. The offsets grow
@@ -163,12 +180,12 @@
    simply gaining a darker shadow. */
 .neu-raised {
   background-color: var(--raised-high);
-  border-color: rgba(255, 255, 255, 0.07);
+  border-color: rgba(255, 255, 255, 0.95);
   box-shadow:
-    -22px -22px 48px rgba(255, 255, 255, 0.06),
-    30px 34px 70px rgba(0, 0, 0, 0.8),
-    inset 0 1px 0 rgba(255, 255, 255, 0.1),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.45);
+    -22px -22px 48px var(--neu-light),
+    30px 34px 70px var(--neu-dark),
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 0 var(--neu-edge-low);
 }
 
 /* Maximum extrusion, for the one element that should read as standing off the
@@ -176,21 +193,21 @@
    gives haze, and raising only the offset gives a hard drop shadow. */
 .neu-pop {
   background-color: var(--raised-high);
-  border-color: rgba(255, 255, 255, 0.08);
+  border-color: rgba(255, 255, 255, 1);
   box-shadow:
-    -28px -28px 60px rgba(255, 255, 255, 0.055),
-    40px 46px 90px -10px rgba(0, 0, 0, 0.88),
-    inset 0 1px 0 rgba(255, 255, 255, 0.12),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.5);
+    -28px -28px 60px var(--neu-light),
+    40px 46px 90px -10px var(--neu-dark),
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.045);
 }
 
 /* Pressed into the surface — the shadows swap sides and move inside */
 .neu-inset {
   background-color: var(--surface);
-  border-color: rgba(255, 255, 255, 0.02);
+  border-color: rgba(0, 0, 0, 0.05);
   box-shadow:
-    inset 6px 7px 16px rgba(0, 0, 0, 0.6),
-    inset -6px -7px 16px rgba(255, 255, 255, 0.03);
+    inset 6px 7px 16px var(--neu-dark),
+    inset -6px -7px 16px var(--neu-light);
 }
 
 /* Skill pills, extruded from the page at small scale. Offsets are kept tight —
@@ -198,23 +215,23 @@
    drop shadow rather than a moulded surface. */
 .neu-pill {
   background-color: var(--raised);
-  border: 1px solid rgba(255, 255, 255, 0.035);
+  border: 1px solid var(--neu-edge);
   box-shadow:
-    -6px -6px 14px rgba(255, 255, 255, 0.035),
-    8px 9px 20px rgba(0, 0, 0, 0.66),
-    inset 0 1px 0 rgba(255, 255, 255, 0.06);
+    -6px -6px 14px var(--neu-light),
+    8px 9px 20px var(--neu-dark),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
-/* Lit: rises off the surface and picks up the accent, without becoming a
-   coloured chip — the mint reads as light falling on it, not as a fill. */
+/* Lit: rises off the surface and picks up the accent as a rim and a faint
+   halo, without becoming a coloured chip. */
 .neu-pill-on {
   background-color: var(--raised-high);
-  border-color: rgba(190, 220, 206, 0.3);
+  border-color: rgb(var(--accent-rgb) / 0.32);
   box-shadow:
-    -10px -10px 24px rgba(255, 255, 255, 0.06),
-    13px 15px 34px rgba(0, 0, 0, 0.8),
-    inset 0 1px 0 rgba(255, 255, 255, 0.11),
-    0 0 30px -8px rgba(190, 220, 206, 0.42);
+    -10px -10px 24px var(--neu-light),
+    13px 15px 34px var(--neu-dark),
+    inset 0 1px 0 rgba(255, 255, 255, 1),
+    0 0 30px -10px rgb(var(--accent-rgb) / 0.32);
 }
 
 /* Pills carry the same material at small scale — lighter sheen, tighter blur */
@@ -222,35 +239,45 @@
   background-image:
     linear-gradient(
       150deg,
-      rgba(255, 255, 255, 0.13) 0%,
-      rgba(255, 255, 255, 0.045) 46%,
-      rgba(255, 255, 255, 0) 100%
+      rgba(255, 255, 255, 0.92) 0%,
+      rgba(255, 255, 255, 0.55) 46%,
+      rgba(255, 255, 255, 0.3) 100%
     ),
     linear-gradient(var(--glass), var(--glass));
   border: 1px solid var(--glass-line);
-  backdrop-filter: blur(14px) saturate(150%);
-  -webkit-backdrop-filter: blur(14px) saturate(150%);
-  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.13);
+  backdrop-filter: blur(14px) saturate(140%);
+  -webkit-backdrop-filter: blur(14px) saturate(140%);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.9);
 }
 
-/* Small mono labels read better without ligatures */
-.font-mono {
-  font-variant-ligatures: none;
+/* Figures that sit in columns — ledger amounts, metric values, live readouts.
+   The site is one typeface now, so this carries no family of its own; it only
+   locks the numerals to a fixed width so columns of money actually line up.
+   Proportional figures would make $18,400.00 and $2,000.00 ragged. */
+.font-data {
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Anywhere numbers are read against each other rather than in prose */
+.tnum {
+  font-variant-numeric: tabular-nums;
 }
 
 /* ─────────────────────────────────────────────
    Surface texture
    ───────────────────────────────────────────── */
 
-/* Fine grain — keeps flat fills from reading as digital gradients. Kept much
-   lighter than on a pale surface, where noise on near-black turns to static. */
+/* Fine grain — keeps flat fills from reading as digital gradients, and is what
+   gives the cream its paper quality. */
 .grain::after {
   content: '';
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.14;
-  mix-blend-mode: soft-light;
+  opacity: 0.22;
+  mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -260,8 +287,8 @@
   position: absolute;
   inset: 0;
   pointer-events: none;
-  opacity: 0.24;
-  mix-blend-mode: overlay;
+  opacity: 0.16;
+  mix-blend-mode: multiply;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
 }
 

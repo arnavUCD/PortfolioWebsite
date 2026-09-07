@@ -248,8 +248,8 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
       const s = sizes[i];
       if (!el || !s) return;
       el.style.transform =
-        `translate3d(${body.position.x - s.w / 2}px, ${body.position.y - s.h / 2}px, 0) ` +
-        `scale(var(--lift, 1))`;
+ `translate3d(${body.position.x - s.w / 2}px, ${body.position.y - s.h / 2}px, 0) ` +
+ `scale(var(--lift, 1))`;
     });
   }, []);
 
@@ -455,7 +455,7 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
 
   return (
     <div>
-      <p className="mb-12 font-mono text-[11px] uppercase tracking-[0.25em] text-ink-faint">
+      <p className="mb-12 text-[11px] uppercase tracking-[0.25em] text-ink-faint">
         {skills.length} skills, drifting
         <span className="hidden lg:inline"> · pick a role and the ones it taught gather to it</span>
       </p>
@@ -488,10 +488,10 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
               }`}
             >
               <div className="flex items-baseline justify-between gap-4">
-                <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-ink-faint">
+                <span className="text-[10px] uppercase tracking-[0.25em] text-ink-faint">
                   {kindLabel(entry.kind)}
                 </span>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-ink-faint">
+                <span className="text-[10px] uppercase tracking-widest text-ink-faint">
                   {entry.period}
                 </span>
               </div>
@@ -516,19 +516,19 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
               <div className="mt-5 flex items-baseline justify-between gap-4 border-t border-glass-line pt-4">
                 {entry.metric ? (
                   <span className="flex items-baseline gap-2.5">
-                    <span className="font-display text-3xl leading-none text-accent">
+                    <span className="font-data text-3xl leading-none text-accent">
                       {entry.metric.value}
                     </span>
-                    <span className="font-mono text-[10px] uppercase tracking-widest text-ink-faint">
+                    <span className="text-[10px] uppercase tracking-widest text-ink-faint">
                       {entry.metric.label}
                     </span>
                   </span>
                 ) : (
-                  <span className="font-mono text-[10px] uppercase tracking-widest text-ink-faint">
+                  <span className="text-[10px] uppercase tracking-widest text-ink-faint">
                     {entry.place}
                   </span>
                 )}
-                <span className="font-mono text-[10px] uppercase tracking-widest text-ink-faint">
+                <span className="text-[10px] uppercase tracking-widest text-ink-faint">
                   {entry.tags.length} skills
                 </span>
               </div>
@@ -564,7 +564,7 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
               {skill.name}
               {/* Skills earned in more than one place are the interesting ones */}
               {skill.roles.length > 1 && (
-                <span className="ml-2 font-mono text-[10px] text-accent">×{skill.roles.length}</span>
+                <span className="ml-2 text-[10px] text-accent">×{skill.roles.length}</span>
               )}
             </button>
           ))}
@@ -576,10 +576,10 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
         {entries.map((entry) => (
           <article key={entry.org} className="rounded-2xl neu p-7">
             <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-              <span className="font-mono text-[10px] uppercase tracking-[0.25em] text-ink-faint">
+              <span className="text-[10px] uppercase tracking-[0.25em] text-ink-faint">
                 {kindLabel(entry.kind)}
               </span>
-              <span className="font-mono text-[10px] uppercase tracking-widest text-ink-faint">
+              <span className="text-[10px] uppercase tracking-widest text-ink-faint">
                 {entry.period} · {entry.place}
               </span>
             </div>
@@ -603,10 +603,10 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
 
             {entry.metric && (
               <div className="mt-6 flex items-baseline gap-3 border-t border-glass-line pt-5">
-                <span className="font-display text-4xl leading-none text-accent">
+                <span className="font-data text-4xl leading-none text-accent">
                   {entry.metric.value}
                 </span>
-                <span className="font-mono text-[10px] uppercase tracking-widest text-ink-faint">
+                <span className="text-[10px] uppercase tracking-widest text-ink-faint">
                   {entry.metric.label}
                 </span>
               </div>
@@ -616,7 +616,7 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
               {entry.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="rounded-full glass-pill px-2.5 py-1 font-mono text-[11px] text-ink-dim"
+                  className="rounded-full glass-pill px-2.5 py-1 text-[11px] text-ink-dim"
                 >
                   {tag}
                 </span>

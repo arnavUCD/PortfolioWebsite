@@ -43,12 +43,12 @@ export const Footer = () => {
             <div>
               <div className="flex items-center gap-6 mb-8">
                 <div className="flex items-baseline gap-3">
-                  <span className="font-mono text-xs text-accent">04</span>
-                  <span className="text-xs font-mono uppercase tracking-[0.3em] text-ink-dim">
+                  <span className="text-xs text-accent">04</span>
+                  <span className="text-xs uppercase tracking-[0.3em] text-ink-dim">
                     Contact
                   </span>
                 </div>
-                <div className="h-px flex-1 max-w-xs bg-gradient-to-r from-white/25 to-transparent" />
+                <div className="h-px flex-1 max-w-xs bg-gradient-to-r from-black/20 to-transparent" />
               </div>
 
               <motion.h2
@@ -73,7 +73,7 @@ export const Footer = () => {
                     <span className="block text-4xl font-light tracking-tighter text-ink group-hover:translate-x-2 transition-transform duration-300">
                       Get in Touch
                     </span>
-                    <span className="block text-sm font-mono uppercase tracking-widest text-ink-faint mt-1 group-hover:text-ink-dim transition-colors">
+                    <span className="block text-sm uppercase tracking-widest text-ink-faint mt-1 group-hover:text-ink-dim transition-colors">
                       Open to Summer 2027 internships
                     </span>
                   </div>
@@ -82,19 +82,19 @@ export const Footer = () => {
                 <div className="flex flex-col gap-4 pl-4">
                   <a
                     href={mailto}
-                    className="flex items-center gap-4 text-lg font-mono text-ink-faint hover:text-ink transition-colors"
+                    className="flex items-center gap-4 text-lg text-ink-faint hover:text-ink transition-colors"
                   >
                     <span className="w-2 h-2 rounded-full bg-accent" />
                     {site.email}
                   </a>
                   <a
                     href={`tel:${site.phoneHref}`}
-                    className="flex items-center gap-4 text-lg font-mono text-ink-faint hover:text-ink transition-colors"
+                    className="flex items-center gap-4 text-lg text-ink-faint hover:text-ink transition-colors"
                   >
                     <span className="w-2 h-2 rounded-full bg-accent/40" />
                     {site.phone}
                   </a>
-                  <span className="flex items-center gap-4 text-lg font-mono text-ink-faint">
+                  <span className="flex items-center gap-4 text-lg text-ink-faint">
                     <span className="w-2 h-2 rounded-full bg-accent/40" />
                     {site.location}
                   </span>
@@ -105,7 +105,7 @@ export const Footer = () => {
             <div className="flex flex-col justify-end gap-12">
               <div className="grid grid-cols-2 gap-12">
                 <div>
-                  <h4 className="font-mono text-xs uppercase tracking-widest text-ink-faint mb-6">
+                  <h4 className="text-xs uppercase tracking-widest text-ink-faint mb-6">
                     Elsewhere
                   </h4>
                   <ul className="space-y-4">
@@ -124,7 +124,7 @@ export const Footer = () => {
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-mono text-xs uppercase tracking-widest text-ink-faint mb-6">
+                  <h4 className="text-xs uppercase tracking-widest text-ink-faint mb-6">
                     Sitemap
                   </h4>
                   <ul className="space-y-4">
@@ -145,10 +145,10 @@ export const Footer = () => {
           </div>
 
           <div className="flex flex-col md:flex-row justify-between items-center pt-12 border-t border-glass-line gap-6">
-            <p className="font-mono text-xs uppercase tracking-widest text-ink-dim">
+            <p className="text-xs uppercase tracking-widest text-ink-dim">
               © {new Date().getFullYear()} {site.name}.
             </p>
-            <p className="font-mono text-xs uppercase tracking-widest text-ink-dim">
+            <p className="text-xs uppercase tracking-widest text-ink-dim">
               Davis, California
             </p>
           </div>
@@ -255,7 +255,7 @@ const ContactModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={onClose}
-            className="fixed inset-0 bg-black/70 backdrop-blur-md z-[100]"
+            className="fixed inset-0 bg-black/35 backdrop-blur-md z-[100]"
           />
 
           <motion.div
@@ -303,7 +303,7 @@ const ContactModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                     </p>
                     <button
                       onClick={onClose}
-                      className="mt-8 text-xs font-mono uppercase tracking-widest text-ink-faint hover:text-ink transition-colors"
+                      className="mt-8 text-xs uppercase tracking-widest text-ink-faint hover:text-ink transition-colors"
                     >
                       Close
                     </button>
@@ -312,8 +312,8 @@ const ContactModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
               </div>
             ) : (
               <div className="mt-12">
-                <span className="text-xs font-mono uppercase tracking-widest text-ink-faint mb-6 block">
-                  04 / Contact
+                <span className="text-xs uppercase tracking-widest text-ink-faint mb-6 block">
+                  <span>04</span> / Contact
                 </span>
                 <h3 className="font-display text-4xl md:text-5xl tracking-tight mb-2">
                   Say <br />
@@ -358,7 +358,7 @@ const ContactModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                   </div>
 
                   <fieldset className="space-y-4">
-                    <legend className="text-xs font-mono uppercase tracking-widest text-ink-faint">
+                    <legend className="text-xs uppercase tracking-widest text-ink-faint">
                       Reason for reaching out
                     </legend>
                     <div className="flex flex-wrap gap-3">
@@ -386,7 +386,7 @@ const ContactModal = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => voi
                   {state === 'error' && (
                     <p
                       role="alert"
-                      className="flex items-start gap-3 text-sm text-rose-300 font-light"
+                      className="flex items-start gap-3 text-sm text-rose-700 font-light"
                     >
                       <AlertCircle className="w-4 h-4 mt-0.5 shrink-0" />
                       That didn't go through. Try again, or email me directly at{' '}

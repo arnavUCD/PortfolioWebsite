@@ -51,8 +51,8 @@ export const Hero = () => {
         transition={{ delay: 1.2, duration: 1 }}
         className="absolute bottom-10 left-1/2 -translate-x-1/2 flex flex-col items-center gap-3"
       >
-        <span className="text-[10px] font-mono uppercase tracking-widest text-ink-dim">Scroll</span>
-        <div className="w-px h-16 bg-gradient-to-b from-transparent via-white/25 to-transparent overflow-hidden">
+        <span className="text-[10px] uppercase tracking-widest text-ink-dim">Scroll</span>
+        <div className="w-px h-16 bg-gradient-to-b from-transparent via-black/20 to-transparent overflow-hidden">
           <motion.div
             animate={{ y: [-64, 64] }}
             transition={{ repeat: Infinity, duration: 2.2, ease: 'linear' }}

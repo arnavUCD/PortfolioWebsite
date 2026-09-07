@@ -1,6 +1,3 @@
-/** Which animated demo renders in the project's live panel. */
-export type DemoKey = 'recon' | 'ecg' | 'grid' | 'nlp';
-
 export type Metric = {
   label: string;
   value: string;
@@ -11,7 +8,11 @@ export type Metric = {
 export type Project = {
   id: string;
   slug: string;
-  demo: DemoKey;
+  /**
+   * What the system actually does, in order. These type out in the card, so
+   * they should read as steps a machine performs — not as marketing copy.
+   */
+  steps: string[];
   title: string;
   category: string;
   year: string;
@@ -31,7 +32,12 @@ export const projects: Project[] = [
   {
     id: 'verity-ai',
     slug: 'verity-ai',
-    demo: 'recon',
+    steps: [
+      'poll bank via Plaid cursor sync',
+      'match against open Zoho invoices',
+      'structured reference, exactly one candidate?',
+      'post payment · audit marked automated'
+    ],
     title: 'Verity AI',
     category: 'Agentic AI / Fintech',
     year: '2026',
@@ -68,7 +74,12 @@ export const projects: Project[] = [
   {
     id: 'cardiosense',
     slug: 'cardiosense',
-    demo: 'ecg',
+    steps: [
+      'bandpass + notch filter, lead II',
+      'Pan-Tompkins R-peak detection',
+      '1D CNN · 43K params · 10 ms',
+      'confidence below 0.85 → defer'
+    ],
     title: 'CardioSense',
     category: 'Embedded ML / Health',
     year: '2026',
@@ -94,7 +105,12 @@ export const projects: Project[] = [
   {
     id: 'infracopilot-ai',
     slug: 'infracopilot-ai',
-    demo: 'grid',
+    steps: [
+      'score 12 chargers nightly',
+      'cost-aware threshold at 0.40',
+      'rank by failure risk',
+      'dispatch, schedule, or ignore'
+    ],
     title: 'InfraCopilot AI',
     category: 'Full-Stack / Predictive ML',
     year: '2026',
@@ -120,7 +136,12 @@ export const projects: Project[] = [
   {
     id: 'fake-news-classifier',
     slug: 'fake-news-classifier',
-    demo: 'nlp',
+    steps: [
+      'TF-IDF + logistic regression',
+      'fine-tuned DistilBERT',
+      'ensemble p(credible)',
+      'inside 0.35–0.65 → defer'
+    ],
     title: 'Fake News Classifier',
     category: 'NLP / Machine Learning',
     year: '2025',

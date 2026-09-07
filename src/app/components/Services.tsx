@@ -10,12 +10,12 @@ export const Services = () => {
         <div className="mb-20">
           <div className="flex items-center gap-6 mb-8">
             <div className="flex items-baseline gap-3">
-              <span className="font-mono text-xs text-accent">03</span>
-              <span className="text-xs font-mono uppercase tracking-[0.3em] text-ink-dim">
+              <span className="text-xs text-accent">03</span>
+              <span className="text-xs uppercase tracking-[0.3em] text-ink-dim">
                 Experience
               </span>
             </div>
-            <div className="h-px flex-1 max-w-xs bg-gradient-to-r from-white/25 to-transparent" />
+            <div className="h-px flex-1 max-w-xs bg-gradient-to-r from-black/20 to-transparent" />
           </div>
 
           <h2 className="font-display text-5xl md:text-7xl leading-[1.02] tracking-[-0.02em] text-ink">

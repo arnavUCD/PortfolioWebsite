@@ -29,7 +29,7 @@ const Preloader = () => (
         initial={{ width: 0 }}
         animate={{ width: '100%' }}
         transition={{ delay: 0.5, duration: 1.5, ease: 'easeInOut' }}
-        className="h-px bg-white/20 w-32"
+        className="h-px bg-black/12 w-32"
       />
     </motion.div>
   </motion.div>
@@ -103,13 +103,13 @@ const HomePage = () => (
 const NotFound = () => (
   <div className="min-h-screen flex items-center justify-center px-6 text-center">
     <div>
-      <span className="font-mono text-xs uppercase tracking-[0.3em] text-ink-faint">404</span>
+      <span className="text-xs uppercase tracking-[0.3em] text-ink-faint">404</span>
       <h1 className="font-display text-5xl md:text-7xl tracking-[-0.02em] mt-4 mb-6">
         Nothing here.
       </h1>
       <Link
         to="/"
-        className="font-mono text-xs uppercase tracking-widest text-ink-dim border-b border-glass-line pb-1 hover:text-accent hover:border-accent transition-colors"
+        className="text-xs uppercase tracking-widest text-ink-dim border-b border-glass-line pb-1 hover:text-accent hover:border-accent transition-colors"
       >
         Back to home
       </Link>
@@ -130,7 +130,7 @@ function App() {
       <ScrollToTop />
 
       {/* The site is always mounted; the preloader simply sits on top of it. */}
-      <div className="min-h-screen text-ink selection:bg-white/20">
+      <div className="min-h-screen text-ink selection:bg-black/12">
         <Backdrop />
         <Navbar />
         <main>

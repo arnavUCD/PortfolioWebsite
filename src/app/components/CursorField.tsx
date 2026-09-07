@@ -18,13 +18,14 @@ type Blob = {
   duration: number;
 };
 
-// On a near-black surface these read as light sources, so they are held at low
-// alpha — a saturated blob at full strength would blow out the wordmark.
+// On a cream surface these read as washes of pigment rather than light
+// sources, so they stay warm and low-alpha — anything saturated here turns the
+// hero into a colour field and swallows the wordmark.
 const blobs: Blob[] = [
-  { color: 'rgba(122,110,88,0.55)', size: '78vw', x: 68, y: 22, pull: 90, stiffness: 40, damping: 22, mass: 2.2, drift: 26, duration: 19 },
-  { color: 'rgba(190,220,206,0.20)', size: '62vw', x: 22, y: 78, pull: 130, stiffness: 26, damping: 18, mass: 3, drift: 34, duration: 24 },
-  { color: 'rgba(150,132,102,0.38)', size: '46vw', x: 82, y: 84, pull: 60, stiffness: 55, damping: 26, mass: 1.4, drift: 18, duration: 16 },
-  { color: 'rgba(216,236,227,0.16)', size: '40vw', x: 34, y: 26, pull: 170, stiffness: 70, damping: 24, mass: 1, drift: 14, duration: 13 }
+  { color: 'rgba(233,201,143,0.5)', size: '78vw', x: 68, y: 22, pull: 90, stiffness: 40, damping: 22, mass: 2.2, drift: 26, duration: 19 },
+  { color: 'rgba(120,196,204,0.34)', size: '62vw', x: 22, y: 78, pull: 130, stiffness: 26, damping: 18, mass: 3, drift: 34, duration: 24 },
+  { color: 'rgba(243,217,171,0.46)', size: '46vw', x: 82, y: 84, pull: 60, stiffness: 55, damping: 26, mass: 1.4, drift: 18, duration: 16 },
+  { color: 'rgba(255,255,255,0.5)', size: '40vw', x: 34, y: 26, pull: 170, stiffness: 70, damping: 24, mass: 1, drift: 14, duration: 13 }
 ];
 
 export const CursorField = () => {
@@ -71,7 +72,7 @@ export const CursorField = () => {
 
       {/* Keeps the type legible wherever the blobs drift — a dark scrim now,
           since the glows brighten the surface rather than tinting paper */}
-      <div className="absolute inset-0 bg-gradient-to-b from-black/25 via-black/10 to-black/35" />
+      <div className="absolute inset-0 bg-gradient-to-b from-white/25 via-white/10 to-white/35" />
     </div>
   );
 };

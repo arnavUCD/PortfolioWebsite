@@ -19,10 +19,10 @@ export const About = () => {
         {/* Section header */}
         <div className="flex items-center gap-6 mb-20">
           <div className="flex items-baseline gap-3">
-            <span className="font-mono text-xs text-accent">01</span>
-            <span className="text-xs font-mono uppercase tracking-[0.3em] text-ink-dim">About</span>
+            <span className="text-xs text-accent">01</span>
+            <span className="text-xs uppercase tracking-[0.3em] text-ink-dim">About</span>
           </div>
-          <div className="h-px flex-1 max-w-xs bg-gradient-to-r from-white/25 to-transparent" />
+          <div className="h-px flex-1 max-w-xs bg-gradient-to-r from-black/20 to-transparent" />
         </div>
 
         <div className="grid lg:grid-cols-[1.15fr_0.85fr] gap-16 lg:gap-24 items-start">
@@ -85,9 +85,9 @@ export const About = () => {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true, margin: '-80px' }}
             transition={{ delay: 0.1, duration: 0.8 }}
-            className="lg:sticky lg:top-28 rounded-2xl neu p-8 shadow-[0_20px_60px_-40px_rgba(0,0,0,0.85)]"
+            className="lg:sticky lg:top-28 rounded-2xl neu p-8 shadow-[0_20px_60px_-40px_rgba(120,108,88,0.4)]"
           >
-            <span className="text-xs font-mono uppercase tracking-[0.3em] text-ink-dim">
+            <span className="text-xs uppercase tracking-[0.3em] text-ink-dim">
               At a glance
             </span>
 
@@ -97,7 +97,7 @@ export const About = () => {
                   key={fact.label}
                   className="grid grid-cols-[7rem_1fr] gap-4 py-4 border-t border-glass-line first:border-t-0 first:pt-0"
                 >
-                  <dt className="text-xs font-mono uppercase tracking-widest text-ink-faint pt-1">
+                  <dt className="text-xs uppercase tracking-widest text-ink-faint pt-1">
                     {fact.label}
                   </dt>
                   <dd className="text-ink font-light">{fact.value}</dd>
@@ -106,7 +106,7 @@ export const About = () => {
             </dl>
 
             <div className="mt-8 pt-6 border-t border-glass-line">
-              <span className="text-xs font-mono uppercase tracking-widest text-ink-faint block mb-4">
+              <span className="text-xs uppercase tracking-widest text-ink-faint block mb-4">
                 Coursework
               </span>
               <div className="flex flex-wrap gap-2">

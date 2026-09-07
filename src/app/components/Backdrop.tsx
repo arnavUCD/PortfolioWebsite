@@ -19,48 +19,52 @@ export const Backdrop = () => {
 
   return (
     <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden grain">
-      {/* Base — lifted very slightly at the top, deepest at the floor */}
+      {/* Base — held at the mid cream for most of the page and deepened toward
+          the floor. Deliberately NOT brightest at the top: the tubelight below
+          supplies that, and it can only read as light if there is somewhere
+          for it to lift the surface from. */}
       <div
         className="absolute inset-0"
         style={{
           background:
-            'linear-gradient(178deg, var(--surface-high) 0%, var(--surface) 42%, var(--surface) 68%, var(--surface-low) 100%)'
+            'linear-gradient(178deg, var(--surface) 0%, var(--surface) 46%, var(--surface) 66%, var(--surface-low) 100%)'
         }}
       />
 
-      {/* Ambient lighting. These are fixed to the viewport rather than the
-          document, so every section gets some fall of light instead of the
-          page going flat black once the hero scrolls away. All of them are
-          held very low — they should register as room light, never as shapes. */}
+      {/* Ambient colour. These are fixed to the viewport rather than the
+          document, so every section picks up some warmth instead of the page
+          going flat white once the hero scrolls away. On a light ground they
+          work as tinted washes rather than glows — held very low, so they
+          register as paper tone and never as visible shapes. */}
 
       {/* Warm key, off-center left */}
       <div
-        className="absolute -left-[15%] top-[8%] w-[70vw] h-[70vw] rounded-full opacity-[0.5] blur-[150px]"
+        className="absolute -left-[15%] top-[8%] w-[70vw] h-[70vw] rounded-full opacity-[0.55] blur-[150px]"
         style={{ background: 'radial-gradient(closest-side, var(--surface-warm), transparent 72%)' }}
       />
 
       {/* Cool mint counterweight, low right */}
       <div
-        className="absolute -right-[20%] bottom-[-10%] w-[65vw] h-[65vw] rounded-full opacity-[0.13] blur-[160px]"
+        className="absolute -right-[20%] bottom-[-10%] w-[65vw] h-[65vw] rounded-full opacity-[0.07] blur-[160px]"
         style={{ background: 'radial-gradient(closest-side, var(--accent), transparent 70%)' }}
       />
 
       {/* Cool rim, high right — keeps the top of every section off pure black */}
       <div
-        className="absolute -right-[10%] -top-[15%] w-[55vw] h-[55vw] rounded-full opacity-[0.09] blur-[150px]"
+        className="absolute -right-[10%] -top-[15%] w-[55vw] h-[55vw] rounded-full opacity-[0.05] blur-[150px]"
         style={{ background: 'radial-gradient(closest-side, var(--accent-strong), transparent 70%)' }}
       />
 
       {/* Warm fill, mid-left, sitting behind the middle of the page */}
       <div
-        className="absolute left-[8%] top-[42%] w-[50vw] h-[50vw] rounded-full opacity-[0.3] blur-[170px]"
+        className="absolute left-[8%] top-[42%] w-[50vw] h-[50vw] rounded-full opacity-[0.4] blur-[170px]"
         style={{ background: 'radial-gradient(closest-side, var(--surface-warm), transparent 74%)' }}
       />
 
       {/* A soft pool low-centre, so the footer is lit rather than fading out */}
       <div
-        className="absolute left-1/2 -translate-x-1/2 bottom-[-18%] w-[75vw] h-[45vw] rounded-full opacity-[0.16] blur-[170px]"
-        style={{ background: 'radial-gradient(closest-side, #6f6a5c, transparent 72%)' }}
+        className="absolute left-1/2 -translate-x-1/2 bottom-[-18%] w-[75vw] h-[45vw] rounded-full opacity-[0.28] blur-[170px]"
+        style={{ background: 'radial-gradient(closest-side, #e8dfc9, transparent 72%)' }}
       />
 
       {/* Tubelight — a strip fixture just above the viewport. The tube itself is
@@ -70,19 +74,19 @@ export const Backdrop = () => {
         {/* The fixture: a narrow, very wide bar of light */}
         <div
           className="absolute left-1/2 -translate-x-1/2 -top-[26px] h-[54px] w-[62vw] rounded-full blur-[26px]"
-          style={{ background: 'linear-gradient(90deg, transparent, rgba(226,240,234,0.30), transparent)' }}
+          style={{ background: 'linear-gradient(90deg, transparent, rgba(255,255,255,0.95), transparent)' }}
         />
         {/* Its bloom, wider and softer */}
         <div
           className="absolute left-1/2 -translate-x-1/2 -top-[90px] h-[240px] w-[86vw] rounded-[50%] blur-[80px]"
-          style={{ background: 'radial-gradient(closest-side, rgba(200,224,214,0.16), transparent 72%)' }}
+          style={{ background: 'radial-gradient(closest-side, rgba(255,255,255,0.8), transparent 72%)' }}
         />
         {/* The spill down the page, which is what actually lights the sections */}
         <div
           className="absolute inset-x-0 top-0 h-[62vh]"
           style={{
             background:
-              'linear-gradient(to bottom, rgba(214,234,225,0.085) 0%, rgba(214,234,225,0.035) 26%, transparent 100%)'
+              'linear-gradient(to bottom, rgba(255,255,255,0.75) 0%, rgba(255,255,255,0.34) 26%, transparent 100%)'
           }}
         />
       </motion.div>
@@ -95,8 +99,8 @@ export const Backdrop = () => {
       </div>
 
       {/* A little light spilling from the top edge, and a soft floor */}
-      <div className="absolute inset-x-0 top-0 h-[45vh] bg-gradient-to-b from-white/[0.05] to-transparent" />
-      <div className="absolute inset-x-0 bottom-0 h-[30vh] bg-gradient-to-t from-black/40 to-transparent" />
+      <div className="absolute inset-x-0 top-0 h-[45vh] bg-gradient-to-b from-white/40 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 h-[30vh] bg-gradient-to-t from-[#e8dfc9]/30 to-transparent" />
     </div>
   );
 };

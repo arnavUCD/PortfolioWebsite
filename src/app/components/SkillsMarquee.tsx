@@ -21,7 +21,7 @@ const Row = ({ group, duration }: { group: SkillGroup; duration: string }) => {
   // copies would not be exactly equal in width and the seam would show.
   const copy = (
     <div className="flex items-center gap-4 pr-4">
-      <span className="shrink-0 rounded-full border border-accent/25 px-6 py-3.5 font-mono text-xs uppercase tracking-[0.25em] text-accent whitespace-nowrap">
+      <span className="shrink-0 rounded-full border border-accent/25 px-6 py-3.5 text-xs uppercase tracking-[0.25em] text-accent whitespace-nowrap">
         {group.label}
       </span>
       {group.items.map((item) => (
