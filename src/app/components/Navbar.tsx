@@ -109,7 +109,13 @@ export const Navbar = () => {
 
   return (
     <>
-    <motion.nav style={{ y }} className="fixed inset-x-0 top-0 z-50 pointer-events-none">
+    {/* No `pointer-events: none` here. Re-enabling pointers on a child of a
+        transformed, composited, fixed ancestor is a known Safari hit-testing
+        failure — Chromium resolves it, Safari drops the click, which is why
+        the nav animated correctly but every button did nothing. The bar is
+        only as tall as its content, and nothing beneath that strip is
+        interactive, so capturing pointers costs nothing. */}
+    <motion.nav style={{ y }} className="fixed inset-x-0 top-0 z-50">
       <div className="container mx-auto px-6 flex items-center justify-between gap-4">
 
         {/* Wordmark — only once the nav has left the hero, where the name is already huge */}
@@ -125,7 +131,7 @@ export const Navbar = () => {
 
         {/* Centred translucent pill */}
         <div
-          className="hidden lg:flex absolute left-1/2 -translate-x-1/2 pointer-events-auto"
+          className="hidden lg:flex absolute left-1/2 -translate-x-1/2"
           onMouseLeave={() => setHovered(null)}
         >
           <motion.div
@@ -199,7 +205,7 @@ export const Navbar = () => {
         <button
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
-          className="lg:hidden pointer-events-auto ml-auto z-50 w-11 h-11 rounded-full glass-pill flex items-center justify-center text-ink"
+          className="lg:hidden ml-auto z-50 w-11 h-11 rounded-full glass-pill flex items-center justify-center text-ink"
         >
           {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
@@ -215,7 +221,7 @@ export const Navbar = () => {
             animate={{ opacity: 1, x: 0 }}
             exit={{ opacity: 0, x: '100%' }}
             transition={{ type: 'tween', duration: 0.4 }}
-            className="fixed inset-0 pointer-events-auto bg-surface/95 backdrop-blur-xl flex flex-col items-center justify-center gap-6 lg:hidden"
+            className="fixed inset-0 bg-surface/95 backdrop-blur-xl flex flex-col items-center justify-center gap-6 lg:hidden"
           >
             {navItems.map((item, i) => (
               <motion.div
