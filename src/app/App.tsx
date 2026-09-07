@@ -10,6 +10,7 @@ import { Navbar } from './components/Navbar';
 import { Work } from './components/Work';
 import { ProjectDetail } from './components/ProjectDetail';
 import { Backdrop } from './components/Backdrop';
+import { scrollToSection } from './lib/scrollToSection';
 
 const Preloader = () => (
   <motion.div
@@ -64,23 +65,11 @@ const ScrollToTop = () => {
     let timer = 0;
 
     const tryScroll = () => {
-      const el = document.getElementById(scrollTo);
-
       // The section may belong to a route that has not painted yet. Timers
       // are used rather than rAF so this still resolves in a background tab.
-      if (!el) {
-        if (attempts++ < 20) timer = window.setTimeout(tryScroll, 50);
-        return;
+      if (!scrollToSection(scrollTo) && attempts++ < 20) {
+        timer = window.setTimeout(tryScroll, 50);
       }
-
-      const before = window.scrollY;
-      el.scrollIntoView({ behavior: 'smooth' });
-
-      // Smooth scrolling is ignored outright in some environments, and under
-      // reduced-motion settings. Snap into place if nothing has moved.
-      timer = window.setTimeout(() => {
-        if (window.scrollY === before) el.scrollIntoView();
-      }, 250);
     };
 
     tryScroll();

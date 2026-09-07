@@ -1,5 +1,6 @@
 import { useCallback } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { scrollToSection } from '../lib/scrollToSection';
 
 /**
  * Click handler for same-page section anchors (About, Projects, Experience,
@@ -23,7 +24,7 @@ export const useSectionLink = (id: string) => {
     (e: React.MouseEvent) => {
       e.preventDefault();
       if (location.pathname === '/') {
-        document.getElementById(id)?.scrollIntoView({ behavior: 'smooth' });
+        scrollToSection(id);
       } else {
         navigate('/', { state: { scrollTo: id } });
       }

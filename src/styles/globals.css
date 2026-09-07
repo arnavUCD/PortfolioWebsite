@@ -91,11 +91,6 @@
   html,
   body {
     background-color: var(--surface);
-    /* The skill cloud settles its pills with physics, so one can briefly
-       overhang its field on load and flash a horizontal scrollbar. `clip`
-       rather than `hidden`: hidden would make this a scroll container and
-       break the `lg:sticky` panels in About and Projects. */
-    overflow-x: clip;
   }
 
   body {
