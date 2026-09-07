@@ -86,6 +86,12 @@
 
   html {
     font-size: var(--font-size);
+    /* Deliberately NOT `scroll-behavior: smooth`. It reads well, but it makes
+       the browser animate window.scrollTo, which puts an animation back on the
+       critical path — measured: with frames stalled, scrollTo never left 0.
+       Three separate Safari failures here all came from an animation being the
+       mechanism rather than a garnish. The nav jumps, like a native #anchor,
+       and always arrives. Add it back here if Safari proves well behaved. */
   }
 
   html,

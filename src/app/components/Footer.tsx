@@ -1,8 +1,8 @@
-import { useState, useEffect, useRef, type ReactNode } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ArrowUpRight, X, Send, AlertCircle } from 'lucide-react';
 import { site, mailto } from '../data/site';
-import { useSectionLink } from '../hooks/useSectionLink';
+import { goToSection } from '../lib/goToSection';
 
 const sitemap = [
   { name: 'About', id: 'about' },
@@ -10,20 +10,6 @@ const sitemap = [
   { name: 'Experience', id: 'experience' },
   { name: 'Contact', id: 'contact' }
 ];
-
-/**
- * Scrolls directly (or hands off through router state from another route)
- * instead of going through a `Link`'s `to` prop — see useSectionLink for why
- * that matters under HashRouter.
- */
-const SectionAnchor = ({ id, children, className }: { id: string; children: ReactNode; className?: string }) => {
-  const onClick = useSectionLink(id);
-  return (
-    <a href={`#${id}`} onClick={onClick} className={className}>
-      {children}
-    </a>
-  );
-};
 
 const elsewhere = [
   { name: 'LinkedIn', href: site.linkedin, external: true },
@@ -130,12 +116,13 @@ export const Footer = () => {
                   <ul className="space-y-4">
                     {sitemap.map((link) => (
                       <li key={link.name}>
-                        <SectionAnchor
-                          id={link.id}
+                        <button
+                          type="button"
+                          onClick={() => goToSection(link.id)}
                           className="text-lg font-light text-ink-dim hover:text-ink transition-colors"
                         >
                           {link.name}
-                        </SectionAnchor>
+                        </button>
                       </li>
                     ))}
                   </ul>

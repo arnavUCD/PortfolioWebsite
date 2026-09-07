@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Hero } from './components/Hero';
@@ -10,7 +10,6 @@ import { Navbar } from './components/Navbar';
 import { Work } from './components/Work';
 import { ProjectDetail } from './components/ProjectDetail';
 import { Backdrop } from './components/Backdrop';
-import { scrollToSection } from './lib/scrollToSection';
 
 const Preloader = () => (
   <motion.div
@@ -36,45 +35,14 @@ const Preloader = () => (
   </motion.div>
 );
 
-type NavState = { scrollTo?: string } | null;
-
-/**
- * Restores scroll on route change, and honours a section handoff passed via
- * router *state* — never the URL. `HashRouter` already stores the route in
- * the URL fragment, so a second, nested `#section` inside it (the old
- * `to="/#about"` scheme) produced a malformed address-bar value; state
- * sidesteps that entirely, since it never touches the URL.
- */
+/** Every route change starts at the top. Section scrolling lives in
+ *  goToSection, which the nav and footer buttons call directly. */
 const ScrollToTop = () => {
-  const location = useLocation();
-  const { pathname, key } = location;
-  const scrollTo = (location.state as NavState)?.scrollTo;
-
-  // Guards against re-scrolling if this location is revisited (e.g. the user
-  // navigates elsewhere and back) without a fresh section request.
-  const consumedKey = useRef<string | null>(null);
+  const { pathname } = useLocation();
 
   useEffect(() => {
-    if (!scrollTo || consumedKey.current === key) {
-      if (!scrollTo) window.scrollTo(0, 0);
-      return;
-    }
-    consumedKey.current = key;
-
-    let attempts = 0;
-    let timer = 0;
-
-    const tryScroll = () => {
-      // The section may belong to a route that has not painted yet. Timers
-      // are used rather than rAF so this still resolves in a background tab.
-      if (!scrollToSection(scrollTo) && attempts++ < 20) {
-        timer = window.setTimeout(tryScroll, 50);
-      }
-    };
-
-    tryScroll();
-    return () => clearTimeout(timer);
-  }, [pathname, scrollTo, key]);
+    window.scrollTo({ top: 0, behavior: 'instant' });
+  }, [pathname]);
 
   return null;
 };
