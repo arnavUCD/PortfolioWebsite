@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from 'react';
 import {
   motion,
   AnimatePresence,
-  useSpring,
   useScroll,
   useTransform,
   useMotionValue,
@@ -59,10 +58,6 @@ export const Navbar = () => {
     Math.max(DOCKED_Y, rest - s)
   );
 
-  // A stiff spring only takes the edge off — it tracks scroll almost exactly
-  // but rounds off the moment the nav lands on the header.
-  const y = useSpring(target, { stiffness: 900, damping: 70, mass: 0.4, restDelta: 0.05 });
-
   useMotionValueEvent(target, 'change', (v) => {
     const next = v <= DOCKED_Y + 1;
     setDocked((prev) => (prev === next ? prev : next));
@@ -87,13 +82,13 @@ export const Navbar = () => {
         the nav animated correctly but every button did nothing. The bar is
         only as tall as its content, and nothing beneath that strip is
         interactive, so capturing pointers costs nothing. */}
-    <motion.nav style={{ y }} className="fixed inset-x-0 top-0 z-50">
+    <motion.nav style={{ y: target }} className="fixed inset-x-0 top-0 z-50 will-change-transform">
       <div className="container mx-auto px-6 flex items-center justify-between gap-4">
 
         {/* Wordmark — only once the nav has left the hero, where the name is already huge */}
         <motion.div
           animate={{ opacity: docked ? 1 : 0, x: docked ? 0 : -8 }}
-          transition={{ duration: 0.4, ease: 'easeOut' }}
+          transition={{ duration: 0.18, ease: 'easeOut' }}
           className={`shrink-0 ${docked ? 'pointer-events-auto' : 'pointer-events-none'}`}
         >
           <Link to="/" className="text-lg tracking-[0.2em] uppercase hover:opacity-60 transition-opacity">
@@ -113,7 +108,7 @@ export const Navbar = () => {
                 ? '0 10px 34px -12px rgba(0,0,0,0.75)'
                 : '0 10px 34px -16px rgba(0,0,0,0.5)'
             }}
-            transition={{ duration: 0.4 }}
+            transition={{ duration: 0.2 }}
             className="flex items-center gap-1 p-1.5 rounded-full border border-glass-line"
           >
             {navItems.map((item) => {
@@ -122,17 +117,19 @@ export const Navbar = () => {
                 <button
                   key={item.name}
                   type="button"
-                  onClick={() => goToSection(item.id)}
+                  onClick={() => {
+                    setHovered(null);
+                    goToSection(item.id);
+                  }}
                   onMouseEnter={() => setHovered(item.name)}
                   className="relative px-5 py-2 rounded-full text-sm tracking-wide outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
                 >
-                  {hovered === item.name && (
-                    <motion.span
-                      layoutId="nav-pill"
-                      transition={{ type: 'spring', stiffness: 380, damping: 32 }}
-                      className="absolute inset-0 rounded-full bg-black/[0.05] shadow-[inset_0_1px_0_rgba(255,255,255,0.95)]"
-                    />
-                  )}
+                  <span
+                    aria-hidden
+                    className={`absolute inset-0 rounded-full bg-black/[0.05] transition-opacity duration-150 ${
+                      hovered === item.name ? 'opacity-100' : 'opacity-0'
+                    }`}
+                  />
                   <span
                     className={`relative z-10 transition-colors duration-300 ${
                       isActive || hovered === item.name ? 'text-ink' : 'text-ink-dim'
@@ -152,7 +149,7 @@ export const Navbar = () => {
         {/* Right-hand actions */}
         <motion.div
           animate={{ opacity: docked ? 1 : 0, x: docked ? 0 : 8 }}
-          transition={{ duration: 0.4, ease: 'easeOut' }}
+          transition={{ duration: 0.18, ease: 'easeOut' }}
           className={`hidden lg:flex items-center gap-4 shrink-0 ${
             docked ? 'pointer-events-auto' : 'pointer-events-none'
           }`}

@@ -37,15 +37,15 @@ export const ProjectDesk = ({ projects }: { projects: Project[] }) => {
           ))}
         </div>
 
-        <AnimatePresence mode="wait">
+        <AnimatePresence initial={false}>
           {activeProject && (
             <motion.div
               key={activeProject.id}
-              initial={{ opacity: 0, y: -24, scale: 0.96 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -16, scale: 0.98 }}
-              transition={{ type: 'spring', stiffness: 240, damping: 25 }}
-              className="relative z-20 mt-10"
+              initial={{ opacity: 0, y: -16 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.24, ease: [0.22, 1, 0.36, 1] }}
+              className="relative z-20 mt-10 will-change-transform"
             >
               <ProjectCard project={activeProject} onClose={() => setActiveId(null)} />
             </motion.div>
@@ -74,27 +74,23 @@ export const ProjectDesk = ({ projects }: { projects: Project[] }) => {
           );
         })}
 
-        <AnimatePresence mode="wait">
+        <AnimatePresence initial={false}>
           {activeProject && (
             <motion.div
               key={activeProject.id}
               initial={{
                 opacity: 0,
-                x: origin.x,
-                y: origin.y,
-                rotate: origin.rotation * 0.8,
-                scale: 0.58,
+                x: origin.x * 0.2,
+                y: origin.y * 0.2,
               }}
-              animate={{ opacity: 1, x: 0, y: 0, rotate: 0, scale: 1 }}
+              animate={{ opacity: 1, x: 0, y: 0 }}
               exit={{
                 opacity: 0,
-                x: origin.x * 0.65,
-                y: origin.y * 0.65,
-                rotate: origin.rotation,
-                scale: 0.7,
+                x: origin.x * 0.1,
+                y: origin.y * 0.1,
               }}
-              transition={{ type: 'spring', stiffness: 185, damping: 24, mass: 0.85 }}
-              className="absolute left-1/2 top-1/2 z-30 w-[min(92%,1120px)] -translate-x-1/2 -translate-y-1/2"
+              transition={{ duration: 0.26, ease: [0.22, 1, 0.36, 1] }}
+              className="absolute left-1/2 top-1/2 z-30 w-[min(92%,1120px)] -translate-x-1/2 -translate-y-1/2 will-change-transform"
             >
               <ProjectCard project={activeProject} onClose={() => setActiveId(null)} />
             </motion.div>

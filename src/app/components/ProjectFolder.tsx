@@ -25,12 +25,11 @@ export const ProjectFolder = ({
     onClick={onOpen}
     aria-expanded={active}
     aria-label={`${active ? 'Close' : 'Open'} ${project.title} project folder`}
-    initial={{ opacity: 0, y: 20, rotate: rotation }}
-    whileInView={{ opacity: 1, y: active ? -10 : 0, rotate: active ? 0 : rotation }}
-    whileHover={{ y: -8, rotate: rotation * 0.35, scale: 1.025 }}
-    whileTap={{ scale: 0.98 }}
-    viewport={{ once: true, amount: 0.4 }}
-    transition={{ type: 'spring', stiffness: 260, damping: 24 }}
+    initial={false}
+    animate={{ y: active ? -6 : 0, rotate: active ? 0 : rotation }}
+    whileHover={{ y: -6, rotate: rotation * 0.35 }}
+    whileTap={{ scale: 0.985 }}
+    transition={{ duration: 0.18, ease: [0.22, 1, 0.36, 1] }}
     className={`project-folder group relative block aspect-[1.35/1] w-full max-w-[250px] text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 ${
       active ? 'is-open' : ''
     }`}
