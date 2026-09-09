@@ -278,6 +278,7 @@
    ───────────────────────────────────────────── */
 .project-folder {
   perspective: 900px;
+  filter: drop-shadow(0 22px 24px rgba(70, 61, 46, 0.22));
   will-change: transform;
   backface-visibility: hidden;
 }
@@ -290,7 +291,7 @@
 .project-folder-paper {
   box-shadow: 0 5px 16px rgba(44, 37, 27, 0.2);
   transform: translateY(2%);
-  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .project-folder-front {
@@ -301,7 +302,7 @@
     inset 0 1px 0 rgba(255, 255, 255, 0.26),
     inset 0 -1px 0 rgba(0, 0, 0, 0.12);
   transform-origin: bottom;
-  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  transition: transform 360ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .project-folder:hover .project-folder-paper,
@@ -359,7 +360,12 @@
 }
 
 .visual-orb {
-  display: none;
+  position: absolute;
+  z-index: -1;
+  width: 15rem;
+  height: 15rem;
+  border-radius: 999px;
+  filter: blur(48px);
 }
 
 .visual-label {
@@ -386,6 +392,8 @@
   box-shadow:
     0 28px 65px -25px rgba(0, 0, 0, 0.9),
     inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .floating-chip {
@@ -401,6 +409,8 @@
   color: rgba(255, 255, 255, 0.65);
   font-size: 0.55rem;
   box-shadow: 0 16px 30px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 @media (max-width: 767px) {

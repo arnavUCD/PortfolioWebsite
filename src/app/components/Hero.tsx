@@ -31,11 +31,6 @@ export const Hero = () => {
         </motion.h1>
       </motion.div>
 
-      {/* The navigation rests here while you're at the top of the home page.
-          Navbar tracks this anchor and rides up to the header as you scroll.
-          It sits outside the parallax wrapper so its position stays exact. */}
-      <div id="nav-anchor" className="relative z-10 mt-14 h-[52px] w-full" />
-
       {/* Footnote, mirroring the reference layout */}
       <motion.span
         initial={{ opacity: 0 }}

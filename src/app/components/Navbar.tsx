@@ -1,159 +1,52 @@
-import { useState, useEffect, useCallback } from 'react';
-import {
-  motion,
-  AnimatePresence,
-  useScroll,
-  useTransform,
-  useMotionValue,
-  useMotionValueEvent
-} from 'motion/react';
+import { useState } from 'react';
 import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { site, mailto } from '../data/site';
-import { goToSection } from '../lib/goToSection';
 
 const navItems = [
-  { name: 'About', id: 'about' },
-  { name: 'Projects', id: 'work' },
-  { name: 'Experience', id: 'experience' },
-  { name: 'Contact', id: 'contact' }
+  { name: 'About', to: '/about' },
+  { name: 'Projects', to: '/projects' },
+  { name: 'Experience', to: '/experience' },
+  { name: 'Contact', to: '/contact' }
 ];
-
-/** Resting offset from the top of the viewport once the nav has docked. */
-const DOCKED_Y = 14;
 
 export const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [hovered, setHovered] = useState<string | null>(null);
-  const [docked, setDocked] = useState(false);
   const location = useLocation();
 
-  const { scrollY } = useScroll();
-
-  // Where the nav rests in the document. On the home page that's the hero
-  // anchor; anywhere else it's the header. Measured on layout only — never
-  // during scroll — so scrolling stays a pure transform with no reflow.
-  const restY = useMotionValue(DOCKED_Y);
-
-  const measure = useCallback(() => {
-    const anchor = document.getElementById('nav-anchor');
-    const rest = anchor ? anchor.getBoundingClientRect().top + window.scrollY : DOCKED_Y;
-    restY.set(rest);
-    // Pages without an anchor are docked from the first paint.
-    setDocked(Math.max(DOCKED_Y, rest - window.scrollY) <= DOCKED_Y + 1);
-  }, [restY]);
-
-  useEffect(() => {
-    // Wait a frame so a freshly mounted route has painted its anchor.
-    const initial = requestAnimationFrame(measure);
-    window.addEventListener('resize', measure);
-    return () => {
-      cancelAnimationFrame(initial);
-      window.removeEventListener('resize', measure);
-    };
-  }, [measure, location.pathname]);
-
-  // Scroll-linked, frame-synced target: no React state in the hot path.
-  const target = useTransform([scrollY, restY], ([s, rest]: number[]) =>
-    Math.max(DOCKED_Y, rest - s)
-  );
-
-  useMotionValueEvent(target, 'change', (v) => {
-    const next = v <= DOCKED_Y + 1;
-    setDocked((prev) => (prev === next ? prev : next));
-  });
-
-  // Close mobile menu on route change
-  useEffect(() => {
-    setIsOpen(false);
-  }, [location]);
-
-  // The dedicated /work pages are a drill-down from the Projects section, so
-  // they keep that item lit. There's no live scroll-spy for the other
-  // sections — the URL no longer carries which one you're viewing (see
-  // goToSection), so nothing to match against once you are back on `/`.
-  const activeName = location.pathname.startsWith('/work') ? 'Projects' : undefined;
+  const activePath = location.pathname.startsWith('/work') ? '/projects' : location.pathname;
 
   return (
     <>
-    {/* No `pointer-events: none` here. Re-enabling pointers on a child of a
-        transformed, composited, fixed ancestor is a known Safari hit-testing
-        failure — Chromium resolves it, Safari drops the click, which is why
-        the nav animated correctly but every button did nothing. The bar is
-        only as tall as its content, and nothing beneath that strip is
-        interactive, so capturing pointers costs nothing. */}
-    <motion.nav style={{ y: target }} className="fixed inset-x-0 top-0 z-50 will-change-transform">
+    <nav className="fixed inset-x-0 top-3 z-50">
       <div className="container mx-auto px-6 flex items-center justify-between gap-4">
+        <Link to="/" className="shrink-0 text-lg tracking-[0.2em] uppercase hover:opacity-60 transition-opacity">
+          Arnav<span className="text-ink-faint"> Sharma</span>
+        </Link>
 
-        {/* Wordmark — only once the nav has left the hero, where the name is already huge */}
-        <motion.div
-          animate={{ opacity: docked ? 1 : 0, x: docked ? 0 : -8 }}
-          transition={{ duration: 0.18, ease: 'easeOut' }}
-          className={`shrink-0 ${docked ? 'pointer-events-auto' : 'pointer-events-none'}`}
-        >
-          <Link to="/" className="text-lg tracking-[0.2em] uppercase hover:opacity-60 transition-opacity">
-            Arnav<span className="text-ink-faint"> Sharma</span>
-          </Link>
-        </motion.div>
-
-        {/* Centred translucent pill */}
-        <div
-          className="hidden lg:flex absolute left-1/2 -translate-x-1/2"
-          onMouseLeave={() => setHovered(null)}
-        >
-          <motion.div
-            animate={{
-              backgroundColor: docked ? 'rgba(255,255,255,0.8)' : 'rgba(255,255,255,0.5)',
-              boxShadow: docked
-                ? '0 10px 34px -12px rgba(0,0,0,0.75)'
-                : '0 10px 34px -16px rgba(0,0,0,0.5)'
-            }}
-            transition={{ duration: 0.2 }}
-            className="flex items-center gap-1 p-1.5 rounded-full border border-glass-line"
-          >
+        <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2">
+          <div className="flex items-center gap-1 rounded-full border border-glass-line bg-white/80 p-1.5 shadow-[0_10px_34px_-12px_rgba(0,0,0,0.5)]">
             {navItems.map((item) => {
-              const isActive = activeName === item.name;
+              const isActive = activePath === item.to;
               return (
-                <button
+                <Link
                   key={item.name}
-                  type="button"
-                  onClick={() => {
-                    setHovered(null);
-                    goToSection(item.id);
-                  }}
-                  onMouseEnter={() => setHovered(item.name)}
-                  className="relative px-5 py-2 rounded-full text-sm tracking-wide outline-none focus-visible:ring-2 focus-visible:ring-accent/40"
+                  to={item.to}
+                  className={`relative rounded-full px-5 py-2 text-sm tracking-wide outline-none transition-colors focus-visible:ring-2 focus-visible:ring-accent/40 ${
+                    isActive ? 'bg-black/[0.055] text-ink' : 'text-ink-dim hover:bg-black/[0.04] hover:text-ink'
+                  }`}
                 >
-                  <span
-                    aria-hidden
-                    className={`absolute inset-0 rounded-full bg-black/[0.05] transition-opacity duration-150 ${
-                      hovered === item.name ? 'opacity-100' : 'opacity-0'
-                    }`}
-                  />
-                  <span
-                    className={`relative z-10 transition-colors duration-300 ${
-                      isActive || hovered === item.name ? 'text-ink' : 'text-ink-dim'
-                    }`}
-                  >
-                    {item.name}
-                  </span>
+                  {item.name}
                   {isActive && (
                     <span className="absolute left-1/2 -translate-x-1/2 bottom-1 w-1 h-1 rounded-full bg-accent" />
                   )}
-                </button>
+                </Link>
               );
             })}
-          </motion.div>
+          </div>
         </div>
 
-        {/* Right-hand actions */}
-        <motion.div
-          animate={{ opacity: docked ? 1 : 0, x: docked ? 0 : 8 }}
-          transition={{ duration: 0.18, ease: 'easeOut' }}
-          className={`hidden lg:flex items-center gap-4 shrink-0 ${
-            docked ? 'pointer-events-auto' : 'pointer-events-none'
-          }`}
-        >
+        <div className="hidden lg:flex items-center gap-4 shrink-0">
           <a
             href={site.resume}
             target="_blank"
@@ -169,9 +62,8 @@ export const Navbar = () => {
             Email me
             <ArrowUpRight className="w-4 h-4" />
           </a>
-        </motion.div>
+        </div>
 
-        {/* Mobile toggle */}
         <button
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
@@ -179,59 +71,34 @@ export const Navbar = () => {
         >
           {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
-
       </div>
-    </motion.nav>
+    </nav>
 
-      {/* Mobile menu */}
-      <AnimatePresence>
-        {isOpen && (
-          <motion.div
-            initial={{ opacity: 0, x: '100%' }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: '100%' }}
-            transition={{ type: 'tween', duration: 0.4 }}
-            className="fixed inset-0 bg-surface/95 backdrop-blur-xl flex flex-col items-center justify-center gap-6 lg:hidden"
+      {isOpen && (
+        <div className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-6 bg-surface/95 backdrop-blur-xl lg:hidden">
+          {navItems.map((item) => (
+            <Link
+              key={item.name}
+              to={item.to}
+              onClick={() => setIsOpen(false)}
+              className="rounded-full glass-pill px-8 py-3 text-3xl tracking-tight transition-colors hover:border-accent/40"
+            >
+              {item.name}
+            </Link>
+          ))}
+          <a
+            href={site.resume}
+            target="_blank"
+            rel="noreferrer"
+            className="rounded-full glass-pill px-8 py-3 text-3xl tracking-tight transition-colors hover:border-accent/40"
           >
-            {navItems.map((item, i) => (
-              <motion.div
-                key={item.name}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.1 + i * 0.06 }}
-              >
-                <button
-                  type="button"
-                  onClick={() => {
-                    setIsOpen(false);
-                    goToSection(item.id);
-                  }}
-                  className="px-8 py-3 rounded-full glass-pill text-3xl tracking-tight transition-colors block hover:border-accent/40"
-                >
-                  {item.name}
-                </button>
-              </motion.div>
-            ))}
-            <motion.a
-              href={site.resume}
-              target="_blank"
-              rel="noreferrer"
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.1 + navItems.length * 0.06 }}
-              className="px-8 py-3 rounded-full glass-pill text-3xl tracking-tight transition-colors hover:border-accent/40"
-            >
-              Résumé
-            </motion.a>
-            <a
-              href={mailto}
-              className="mt-4 text-sm tracking-widest uppercase text-ink-dim"
-            >
-              {site.email}
-            </a>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            Résumé
+          </a>
+          <a href={mailto} className="mt-4 text-sm tracking-widest uppercase text-ink-dim">
+            {site.email}
+          </a>
+        </div>
+      )}
     </>
   );
 };

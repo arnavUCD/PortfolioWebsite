@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useLayoutEffect } from 'react';
 import { HashRouter as Router, Routes, Route, Link, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
 import { Hero } from './components/Hero';
@@ -35,27 +35,50 @@ const Preloader = () => (
   </motion.div>
 );
 
-/** Every route change starts at the top. Section scrolling lives in
- *  goToSection, which the nav and footer buttons call directly. */
+const sectionRoutes: Record<string, string> = {
+  '/about': 'about',
+  '/projects': 'work',
+  '/experience': 'experience',
+  '/contact': 'contact',
+};
+
+/** Detail routes start at the top. Named section routes position themselves
+ *  synchronously in HomePage so there is no hero flash before the jump. */
 const ScrollToTop = () => {
   const { pathname } = useLocation();
 
   useEffect(() => {
+    if (sectionRoutes[pathname]) return;
     window.scrollTo({ top: 0, behavior: 'instant' });
   }, [pathname]);
 
   return null;
 };
 
-const HomePage = () => (
-  <>
-    <Hero />
-    <About />
-    <Projects />
-    <Services />
-    <Footer />
-  </>
-);
+const HomePage = () => {
+  const { pathname } = useLocation();
+  const sectionId = sectionRoutes[pathname];
+  const validRoute = pathname === '/' || Boolean(sectionId);
+
+  useLayoutEffect(() => {
+    if (!sectionId) return;
+    const section = document.getElementById(sectionId);
+    if (!section) return;
+    window.scrollTo(0, Math.max(0, section.offsetTop - 80));
+  }, [sectionId]);
+
+  if (!validRoute) return <NotFound />;
+
+  return (
+    <>
+      <Hero />
+      <About />
+      <Projects />
+      <Services />
+      <Footer />
+    </>
+  );
+};
 
 const NotFound = () => (
   <div className="min-h-screen flex items-center justify-center px-6 text-center">
@@ -92,7 +115,7 @@ function App() {
         <Navbar />
         <main>
           <Routes>
-            <Route path="/" element={<HomePage />} />
+            <Route path="/:section?" element={<HomePage />} />
             <Route path="/work" element={<Work />} />
             <Route path="/work/:slug" element={<ProjectDetail />} />
             <Route path="*" element={<NotFound />} />
