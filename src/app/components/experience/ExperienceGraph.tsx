@@ -2,6 +2,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import { useReducedMotion } from 'motion/react';
 import Matter from 'matter-js';
 import type { ExperienceEntry } from '../../data/experience';
+import { ExperienceVisual } from './ExperienceVisual';
 
 const { Engine, Bodies, Body, Composite } = Matter;
 
@@ -464,7 +465,7 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
       <div
         ref={wrapRef}
         onMouseLeave={() => setActive(null)}
-        className="relative hidden lg:grid lg:grid-cols-[minmax(0,27rem)_1fr] lg:gap-20"
+        className="relative hidden lg:grid lg:grid-cols-[minmax(0,34rem)_1fr] lg:gap-12 xl:gap-20"
       >
         {/* Roles */}
         <div className="relative z-10 flex flex-col justify-center gap-7">
@@ -479,14 +480,14 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
               onFocus={() => setActive({ kind: 'role', index: i })}
               onClick={() => toggle({ kind: 'role', index: i })}
               style={{ opacity: roleLit(i) ? 1 : 0.28 }}
-              // Transitioning `all` would animate the neumorphic shadow pair on
-              // every hover, which is expensive and looks smeared.
-              className={`cursor-default rounded-2xl p-6 outline-none transition-[opacity,border-color,box-shadow,background-color] duration-300 focus-visible:ring-2 focus-visible:ring-accent/40 ${
+              className={`experience-card grid cursor-default grid-cols-[9.5rem_1fr] overflow-hidden rounded-[1.4rem] outline-none transition-[opacity,border-color,box-shadow] duration-300 focus-visible:ring-2 focus-visible:ring-accent/40 ${
                 active?.kind === 'role' && active.index === i
-                  ? 'neu neu-raised border-accent/35'
-                  : 'neu'
+                  ? 'experience-card-active'
+                  : ''
               }`}
             >
+              <ExperienceVisual entry={entry} />
+              <div className="p-6">
               <div className="flex items-baseline justify-between gap-4">
                 <span className="text-[10px] uppercase tracking-[0.25em] text-ink-faint">
                   {kindLabel(entry.kind)}
@@ -532,6 +533,7 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
                   {entry.tags.length} skills
                 </span>
               </div>
+              </div>
             </article>
           ))}
         </div>
@@ -574,7 +576,9 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
       {/* ── Stacked fallback: no room for the cloud below lg ── */}
       <div className="flex flex-col gap-8 lg:hidden">
         {entries.map((entry) => (
-          <article key={entry.org} className="rounded-2xl neu p-7">
+          <article key={entry.org} className="experience-card overflow-hidden rounded-[1.4rem]">
+            <ExperienceVisual entry={entry} />
+            <div className="p-7">
             <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
               <span className="text-[10px] uppercase tracking-[0.25em] text-ink-faint">
                 {kindLabel(entry.kind)}
@@ -621,6 +625,7 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
                   {tag}
                 </span>
               ))}
+            </div>
             </div>
           </article>
         ))}

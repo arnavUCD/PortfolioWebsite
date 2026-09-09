@@ -18,16 +18,26 @@ export type ExperienceEntry = {
 export const experience: ExperienceEntry[] = [
   {
     kind: 'work',
-    org: 'Fonabit Technologies',
-    role: 'Software Developer & Data Research Intern',
-    period: 'Jun — Sep 2025',
+    org: 'Fonabit AI',
+    role: 'Software Engineer Intern',
+    period: 'Jun — Sep 2026',
     place: 'Remote',
     points: [
-      'Built machine learning models over internal datasets and turned the output into insights the business actually used.',
-      'Shipped Tableau dashboards on top of those models, cutting manual reporting effort by roughly 70%.'
+      'Built custom MCP servers and APIs that connect LLM agents to enterprise CRM data.',
+      'Designed A2A multi-agent workflows for sales and lead management with RBAC, prompt-injection defenses, and human approval for high-stakes actions.',
+      'Optimized prompt chains and context retrieval to reduce token overhead and response latency.'
     ],
     tags: [
       'Python',
+      'REST APIs',
+      'MCP',
+      'LLM Agents',
+      'Agent-to-Agent (A2A)',
+      'RBAC',
+      'Prompt Injection Defense',
+      'Human-in-the-loop',
+      'Prompt Engineering',
+      'Context Engineering',
       'scikit-learn',
       'Pandas',
       'NumPy',
@@ -38,14 +48,13 @@ export const experience: ExperienceEntry[] = [
       'Data Visualization',
       'Tableau',
       'Salesforce'
-    ],
-    metric: { value: '70%', label: 'less manual reporting' }
+    ]
   },
   {
     kind: 'work',
     org: 'Pixabits Technologies',
     role: 'Software Developer Intern',
-    period: 'Jun — Aug 2024',
+    period: 'Jun — Aug 2025',
     place: 'Remote',
     points: [
       'Built backend services and REST APIs in Python and Java, improving response time and throughput by over 50%.',
@@ -70,12 +79,12 @@ export const experience: ExperienceEntry[] = [
   {
     kind: 'projects',
     org: 'Independent Projects',
-    role: 'CardioSense · InfraCopilot AI · Fake News Classifier',
+    role: 'Verity · CardioSense · InfraCopilot AI · Fake News Classifier',
     period: '2025 — 2026',
     place: 'Self-directed',
     points: [
-      'An on-device ECG arrhythmia classifier, a predictive-maintenance platform for EV charging networks, and a calibrated news-credibility model.',
-      'Most of the modelling and embedded tooling below came from building these rather than from coursework.'
+      'Built an agentic accounting platform, a local ECG monitoring pipeline, an EV fleet-triage model, and a calibrated news-credibility classifier.',
+      'Shipped across agent orchestration, ML, signal processing, backend infrastructure, and product interfaces.'
     ],
     tags: [
       'PyTorch',
@@ -96,9 +105,16 @@ export const experience: ExperienceEntry[] = [
       'Swift',
       'Arduino / BLE',
       'Embedded Systems',
-      'Linux'
+      'Linux',
+      'LangGraph',
+      'MCP',
+      'LLM Agents',
+      'PostgreSQL RLS',
+      'Docker',
+      'pytest',
+      'Astro'
     ],
-    metric: { value: '3', label: 'shipped end to end' }
+    metric: { value: '4', label: 'shipped end to end' }
   },
   {
     kind: 'education',
@@ -126,7 +142,12 @@ export const experience: ExperienceEntry[] = [
       'Memory Management',
       'CPU Pipelining',
       'Caches',
-      'Computer Architecture'
+      'Computer Architecture',
+      'Haskell',
+      'Erlang',
+      'Prolog',
+      'Functional Programming',
+      'Logic Programming'
     ]
   }
 ];

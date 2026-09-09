@@ -420,6 +420,110 @@
 }
 
 /* ─────────────────────────────────────────────
+   Experience cards
+   ───────────────────────────────────────────── */
+.experience-card {
+  background: rgba(255, 253, 248, 0.94);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+  box-shadow:
+    0 28px 70px -42px rgba(72, 61, 44, 0.52),
+    inset 0 1px 0 rgba(255, 255, 255, 0.95);
+}
+
+.experience-card-active {
+  border-color: rgb(var(--accent-rgb) / 0.35);
+  box-shadow:
+    0 32px 76px -38px rgba(72, 61, 44, 0.58),
+    0 0 0 1px rgb(var(--accent-rgb) / 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 1);
+}
+
+.experience-visual {
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  min-height: 100%;
+  flex-direction: column;
+  overflow: visible;
+  padding: 1.35rem 1.2rem;
+}
+
+.experience-visual::before {
+  content: '';
+  position: absolute;
+  inset: 0 -6rem 0 0;
+  z-index: -2;
+  background: var(--experience-gradient);
+  -webkit-mask-image: linear-gradient(to right, #000 0%, #000 58%, transparent 100%);
+  mask-image: linear-gradient(to right, #000 0%, #000 58%, transparent 100%);
+}
+
+.experience-visual::after {
+  content: '';
+  position: absolute;
+  inset: 0 -4rem 0 0;
+  z-index: -1;
+  opacity: 0.16;
+  background-image:
+    linear-gradient(rgba(255, 255, 255, 0.25) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.2) 1px, transparent 1px);
+  background-size: 24px 24px;
+  -webkit-mask-image: linear-gradient(145deg, #000 0%, rgba(0, 0, 0, 0.8) 48%, transparent 88%);
+  mask-image: linear-gradient(145deg, #000 0%, rgba(0, 0, 0, 0.8) 48%, transparent 88%);
+}
+
+.experience-visual-agents {
+  --experience-gradient:
+    radial-gradient(circle at 95% 10%, rgba(120, 187, 255, 0.45), transparent 40%),
+    linear-gradient(155deg, #142a6a, #175ba6);
+}
+
+.experience-visual-data {
+  --experience-gradient:
+    radial-gradient(circle at 15% 90%, rgba(126, 211, 201, 0.35), transparent 42%),
+    linear-gradient(155deg, #07565f, #0e7c86);
+}
+
+.experience-visual-software {
+  --experience-gradient:
+    radial-gradient(circle at 90% 15%, rgba(255, 197, 151, 0.35), transparent 42%),
+    linear-gradient(155deg, #73452f, #b86f4c);
+}
+
+.experience-visual-projects {
+  --experience-gradient:
+    radial-gradient(circle at 10% 10%, rgba(111, 176, 184, 0.35), transparent 42%),
+    linear-gradient(155deg, #1f292c, #405b60);
+}
+
+.experience-visual-education {
+  --experience-gradient:
+    radial-gradient(circle at 90% 90%, rgba(201, 214, 182, 0.3), transparent 42%),
+    linear-gradient(155deg, #4c5847, #7b8972);
+}
+
+@media (max-width: 1023px) {
+  .experience-visual {
+    min-height: 10rem;
+    flex-direction: row;
+    align-items: center;
+    gap: 1.5rem;
+  }
+
+  .experience-visual::before {
+    inset: 0 0 -5rem;
+    -webkit-mask-image: linear-gradient(to bottom, #000 0%, #000 58%, transparent 100%);
+    mask-image: linear-gradient(to bottom, #000 0%, #000 58%, transparent 100%);
+  }
+
+  .experience-visual::after {
+    inset: 0 0 -3rem;
+    -webkit-mask-image: linear-gradient(155deg, #000 0%, rgba(0, 0, 0, 0.75) 46%, transparent 88%);
+    mask-image: linear-gradient(155deg, #000 0%, rgba(0, 0, 0, 0.75) 46%, transparent 88%);
+  }
+}
+
+/* ─────────────────────────────────────────────
    Surface texture
    ───────────────────────────────────────────── */
 

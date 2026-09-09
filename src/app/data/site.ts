@@ -6,10 +6,9 @@ export const site = {
   /** tel: needs the unpunctuated form. */
   phoneHref: '+19172246315',
   location: 'Davis, CA',
-  linkedin: 'https://linkedin.com/in/arnav-sharma-ucd',
+  linkedin: 'https://linkedin.com/in/arnav-sharma-772469279',
   github: 'https://github.com/arnavUCD',
-  /** Lives in public/, so it needs the deploy base prefix rather than a bare path. */
-  resume: `${import.meta.env.BASE_URL}Arnav-Sharma-Resume.pdf`
+  resume: new URL('../../../Arnav Sharma Resume.pdf', import.meta.url).href
 } as const;
 
 export const mailto = `mailto:${site.email}`;
