@@ -22,7 +22,7 @@ export const Projects = () => {
               Projects
             </h2>
             <p className="mt-6 max-w-xl text-lg font-light text-ink-dim leading-relaxed">
-              Four working files from recent builds. Pick a folder and pull out the story.
+              Four systems, filed by what they solve. Open a folder to inspect the build.
             </p>
           </div>
 

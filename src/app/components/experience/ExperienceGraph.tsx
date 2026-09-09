@@ -480,59 +480,59 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
               onFocus={() => setActive({ kind: 'role', index: i })}
               onClick={() => toggle({ kind: 'role', index: i })}
               style={{ opacity: roleLit(i) ? 1 : 0.28 }}
-              className={`experience-card grid cursor-default grid-cols-[9.5rem_1fr] overflow-hidden rounded-[1.4rem] outline-none transition-[opacity,border-color,box-shadow] duration-300 focus-visible:ring-2 focus-visible:ring-accent/40 ${
+              className={`experience-card group cursor-default overflow-hidden rounded-[1.75rem] outline-none transition-[opacity,border-color,box-shadow,transform] duration-300 focus-visible:ring-2 focus-visible:ring-accent/40 ${
                 active?.kind === 'role' && active.index === i
                   ? 'experience-card-active'
                   : ''
               }`}
             >
               <ExperienceVisual entry={entry} />
-              <div className="p-6">
-              <div className="flex items-baseline justify-between gap-4">
-                <span className="text-[10px] uppercase tracking-[0.25em] text-ink-faint">
-                  {kindLabel(entry.kind)}
-                </span>
-                <span className="text-[10px] uppercase tracking-widest text-ink-faint">
-                  {entry.period}
-                </span>
-              </div>
-
-              <h3 className="mt-3 font-display text-[1.75rem] leading-[1.12] tracking-[-0.02em] text-ink">
-                {entry.org}
-              </h3>
-              <p className="mt-2 text-sm text-accent">{entry.role}</p>
-
-              <ul className="mt-4 space-y-2">
-                {entry.points.map((point) => (
-                  <li
-                    key={point}
-                    className="flex gap-3 text-sm font-light leading-relaxed text-ink-dim"
-                  >
-                    <span className="mt-[0.55rem] h-1 w-1 shrink-0 rounded-full bg-accent/50" />
-                    <span>{point}</span>
-                  </li>
-                ))}
-              </ul>
-
-              <div className="mt-5 flex items-baseline justify-between gap-4 border-t border-glass-line pt-4">
-                {entry.metric ? (
-                  <span className="flex items-baseline gap-2.5">
-                    <span className="font-data text-3xl leading-none text-accent">
-                      {entry.metric.value}
-                    </span>
-                    <span className="text-[10px] uppercase tracking-widest text-ink-faint">
-                      {entry.metric.label}
-                    </span>
+              <div className="experience-card-body relative z-10 -mt-7 rounded-t-[1.65rem] p-7">
+                <div className="flex items-baseline justify-between gap-4">
+                  <span className="text-[10px] uppercase tracking-[0.25em] text-ink-faint">
+                    {kindLabel(entry.kind)}
                   </span>
-                ) : (
                   <span className="text-[10px] uppercase tracking-widest text-ink-faint">
-                    {entry.place}
+                    {entry.period}
                   </span>
-                )}
-                <span className="text-[10px] uppercase tracking-widest text-ink-faint">
-                  {entry.tags.length} skills
-                </span>
-              </div>
+                </div>
+
+                <h3 className="mt-3 font-display text-[2rem] leading-[1.08] tracking-[-0.03em] text-ink">
+                  {entry.org}
+                </h3>
+                <p className="mt-2 text-sm font-medium text-accent">{entry.role}</p>
+
+                <ul className="mt-5 space-y-2.5">
+                  {entry.points.map((point) => (
+                    <li
+                      key={point}
+                      className="flex gap-3 text-sm font-light leading-relaxed text-ink-dim"
+                    >
+                      <span className="mt-[0.55rem] h-1 w-1 shrink-0 rounded-full bg-accent/50" />
+                      <span>{point}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="mt-6 flex items-baseline justify-between gap-4 border-t border-glass-line pt-5">
+                  {entry.metric ? (
+                    <span className="flex items-baseline gap-2.5">
+                      <span className="font-data text-3xl leading-none text-accent">
+                        {entry.metric.value}
+                      </span>
+                      <span className="text-[10px] uppercase tracking-widest text-ink-faint">
+                        {entry.metric.label}
+                      </span>
+                    </span>
+                  ) : (
+                    <span className="text-[10px] uppercase tracking-widest text-ink-faint">
+                      {entry.place}
+                    </span>
+                  )}
+                  <span className="text-[10px] uppercase tracking-widest text-ink-faint">
+                    {entry.tags.length} skills
+                  </span>
+                </div>
               </div>
             </article>
           ))}
@@ -576,56 +576,56 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
       {/* ── Stacked fallback: no room for the cloud below lg ── */}
       <div className="flex flex-col gap-8 lg:hidden">
         {entries.map((entry) => (
-          <article key={entry.org} className="experience-card overflow-hidden rounded-[1.4rem]">
+          <article key={entry.org} className="experience-card overflow-hidden rounded-[1.75rem]">
             <ExperienceVisual entry={entry} />
-            <div className="p-7">
-            <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-              <span className="text-[10px] uppercase tracking-[0.25em] text-ink-faint">
-                {kindLabel(entry.kind)}
-              </span>
-              <span className="text-[10px] uppercase tracking-widest text-ink-faint">
-                {entry.period} · {entry.place}
-              </span>
-            </div>
-
-            <h3 className="mt-4 font-display text-3xl leading-[1.1] tracking-[-0.02em] text-ink">
-              {entry.org}
-            </h3>
-            <p className="mt-2 text-accent">{entry.role}</p>
-
-            <ul className="mt-5 space-y-2.5">
-              {entry.points.map((point) => (
-                <li
-                  key={point}
-                  className="flex gap-3 text-sm font-light leading-relaxed text-ink-dim"
-                >
-                  <span className="mt-[0.6rem] h-1 w-1 shrink-0 rounded-full bg-accent/50" />
-                  <span>{point}</span>
-                </li>
-              ))}
-            </ul>
-
-            {entry.metric && (
-              <div className="mt-6 flex items-baseline gap-3 border-t border-glass-line pt-5">
-                <span className="font-data text-4xl leading-none text-accent">
-                  {entry.metric.value}
+            <div className="experience-card-body relative z-10 -mt-7 rounded-t-[1.65rem] p-7">
+              <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
+                <span className="text-[10px] uppercase tracking-[0.25em] text-ink-faint">
+                  {kindLabel(entry.kind)}
                 </span>
                 <span className="text-[10px] uppercase tracking-widest text-ink-faint">
-                  {entry.metric.label}
+                  {entry.period} · {entry.place}
                 </span>
               </div>
-            )}
 
-            <div className="mt-6 flex flex-wrap gap-2">
-              {entry.tags.map((tag) => (
-                <span
-                  key={tag}
-                  className="rounded-full glass-pill px-2.5 py-1 text-[11px] text-ink-dim"
-                >
-                  {tag}
-                </span>
-              ))}
-            </div>
+              <h3 className="mt-4 font-display text-3xl leading-[1.1] tracking-[-0.02em] text-ink">
+                {entry.org}
+              </h3>
+              <p className="mt-2 text-accent">{entry.role}</p>
+
+              <ul className="mt-5 space-y-2.5">
+                {entry.points.map((point) => (
+                  <li
+                    key={point}
+                    className="flex gap-3 text-sm font-light leading-relaxed text-ink-dim"
+                  >
+                    <span className="mt-[0.6rem] h-1 w-1 shrink-0 rounded-full bg-accent/50" />
+                    <span>{point}</span>
+                  </li>
+                ))}
+              </ul>
+
+              {entry.metric && (
+                <div className="mt-6 flex items-baseline gap-3 border-t border-glass-line pt-5">
+                  <span className="font-data text-4xl leading-none text-accent">
+                    {entry.metric.value}
+                  </span>
+                  <span className="text-[10px] uppercase tracking-widest text-ink-faint">
+                    {entry.metric.label}
+                  </span>
+                </div>
+              )}
+
+              <div className="mt-6 flex flex-wrap gap-2">
+                {entry.tags.map((tag) => (
+                  <span
+                    key={tag}
+                    className="rounded-full glass-pill px-2.5 py-1 text-[11px] text-ink-dim"
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
             </div>
           </article>
         ))}

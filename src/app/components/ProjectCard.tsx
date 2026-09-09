@@ -12,11 +12,17 @@ const LinkIcon = ({ kind }: { kind: ProjectLink['kind'] }) => {
 export const ProjectCard = ({
   project,
   onClose,
+  presentation = 'default',
 }: {
   project: Project;
   onClose?: () => void;
+  presentation?: 'default' | 'finder';
 }) => (
-  <article className="project-panel relative overflow-hidden rounded-[1.75rem] border border-white/70 bg-[#fffdf8] text-ink">
+  <article
+    className={`project-panel relative overflow-hidden rounded-[1.75rem] border border-white/70 bg-[#fffdf8] text-ink ${
+      presentation === 'finder' ? 'project-panel-finder' : ''
+    }`}
+  >
     {onClose && (
       <button
         type="button"
