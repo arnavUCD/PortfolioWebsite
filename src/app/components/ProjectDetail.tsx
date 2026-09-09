@@ -1,6 +1,6 @@
 import { useParams, Link } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { ArrowLeft } from 'lucide-react';
+import { ArrowLeft, ExternalLink, FileText, Github } from 'lucide-react';
 import { getProject } from '../data/projects';
 import { ProjectReel } from './ProjectReel';
 
@@ -45,6 +45,32 @@ export const ProjectDetail = () => {
           <p className="max-w-2xl text-xl font-light text-ink-dim leading-relaxed mb-12">
             {project.tagline}
           </p>
+
+          {project.links.length > 0 && (
+            <div className="mb-12 flex flex-wrap gap-3">
+              {project.links.map((projectLink) => {
+                const Icon =
+                  projectLink.kind === 'github'
+                    ? Github
+                    : projectLink.kind === 'deck'
+                      ? FileText
+                      : ExternalLink;
+
+                return (
+                  <a
+                    key={projectLink.href}
+                    href={projectLink.href}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-2 rounded-full border border-glass-line bg-white/40 px-5 py-2.5 text-xs transition-colors hover:border-accent hover:text-accent"
+                  >
+                    <Icon className="h-4 w-4" />
+                    {projectLink.label}
+                  </a>
+                );
+              })}
+            </div>
+          )}
 
           <div className="rounded-2xl neu p-6 md:p-10">
             <div className="flex items-center gap-2.5 pb-5 mb-6 border-b border-glass-line">

@@ -5,6 +5,12 @@ export type Metric = {
   note: string;
 };
 
+export type ProjectLink = {
+  label: string;
+  href: string;
+  kind: 'github' | 'live' | 'deck';
+};
+
 export type Project = {
   id: string;
   slug: string;
@@ -26,7 +32,13 @@ export type Project = {
   role: string;
   description: string;
   highlights: string[];
+  links: ProjectLink[];
+  /** Folder colour used in the project desk. */
+  folderColor: string;
+  folderDark: string;
 };
+
+const cardioSensePitchDeck = new URL('../../../CardioSense_Pitch.pdf', import.meta.url).href;
 
 export const projects: Project[] = [
   {
@@ -54,10 +66,10 @@ export const projects: Project[] = [
       'Docker'
     ],
     metrics: [
-      { label: 'Unsafe auto-posts', value: '0', note: 'across a live bank run' },
-      { label: 'Self-approval blocks', value: '3×', note: 'agent, API, database' },
-      { label: 'Credit issuance', value: 'Exactly once', note: 'crash-injected tests' },
-      { label: 'Infrastructure', value: 'Live', note: 'real bank, real books' }
+      { label: 'Pipeline', value: '6 stages', note: 'ingest through report' },
+      { label: 'Safety layers', value: '3', note: 'agent, API, database' },
+      { label: 'Live connectors', value: '2', note: 'Plaid and Zoho Books' },
+      { label: 'Decision rule', value: 'Evidence', note: 'the model never authorizes' }
     ],
     client: 'Independent',
     role: 'LangGraph, FastAPI, PostgreSQL RLS, Plaid, Zoho Books',
@@ -69,7 +81,13 @@ export const projects: Project[] = [
       'Achieved exactly-once credit issuance internally with a transactional outbox and idempotency keys, proven under tests that deliberately inject crashes mid-transaction and concurrent retries.',
       'Designed at-most-once write-back to Zoho honestly rather than overclaiming a guarantee an external API cannot give: deterministic reference tags, a reconciliation check before every write, and a background sweep for duplicates — adversarially tested against the write-succeeds-but-local-record-fails case that causes real double-payments.',
       'Isolated tenants with PostgreSQL Row-Level Security verified against active spoofing, and marked every automated decision in the audit trail with a database rule that makes it impossible to disguise as a human approval.'
-    ]
+    ],
+    links: [
+      { label: 'Live site', href: 'https://arnavucd.github.io/verity-site/', kind: 'live' },
+      { label: 'Site source', href: 'https://github.com/arnavUCD/verity-site', kind: 'github' }
+    ],
+    folderColor: '#242b2b',
+    folderDark: '#151919'
   },
   {
     id: 'cardiosense',
@@ -78,60 +96,71 @@ export const projects: Project[] = [
       'bandpass + notch filter, lead II',
       'Pan-Tompkins R-peak detection',
       '1D CNN · 43K params · 10 ms',
-      'confidence below 0.85 → defer'
+      'confidence below 0.60 → defer'
     ],
     title: 'CardioSense',
     category: 'Embedded ML / Health',
     year: '2026',
-    tagline: 'Atrial fibrillation detection on a $30 wrist device, no cloud.',
+    tagline: 'Continuous ECG monitoring for patients underserved by consumer wearables.',
     stack: ['PyTorch', 'NumPy', 'SciPy', 'SwiftUI', 'Streamlit', 'BLE'],
     metrics: [
-      { label: 'Accuracy', value: '91%', note: '95% with safety gate' },
-      { label: 'Inference', value: '10 ms', note: 'on-device' },
-      { label: 'Model', value: '200 KB', note: '43K params' },
+      { label: 'Held-out accuracy', value: '90.9%', note: '2,741 windows' },
+      { label: 'Arrhythmia recall', value: '88.7%', note: 'record-separated test' },
+      { label: 'Model', value: '43K', note: 'trainable parameters' },
       { label: 'Built in', value: '24 h', note: 'end to end' }
     ],
     client: 'UC Davis',
     role: 'PyTorch, DSP, SwiftUI, BLE',
     description:
-      'A sub-$30 wearable ECG that continuously detects atrial fibrillation entirely on-device — no cloud — returning a rhythm verdict in under 10 seconds. Built end-to-end in 24 hours.',
+      'A no-cloud ECG monitoring prototype pairing an AD8232 patch and signal-processing pipeline with a compact CNN, a calm SwiftUI patient app, and a detailed clinician dashboard.',
     highlights: [
-      'Trained a 43K-parameter 1D CNN (PyTorch) on MIT-BIH clinical ECG data to classify 10-second windows as Normal or Arrhythmia, reaching ~91% accuracy — 95% with a strict "Uncertain" safety gate.',
-      '~10 ms inference from a 200 KB model, small enough to run continuously on constrained hardware.',
+      'Trained a 43,362-parameter 1D CNN on MIT-BIH clinical ECG data to classify 10-second windows as Normal or Arrhythmia, reaching 90.9% held-out accuracy.',
+      'Runs the complete inference pipeline locally on a laptop; the SwiftUI patient app polls its output over the local network without a cloud service.',
       'Built the full signal-processing pipeline: bandpass/notch filtering, Pan-Tompkins R-peak detection, and HRV feature extraction.',
-      'Shipped real-time SwiftUI patient and Streamlit clinician interfaces streaming over BLE.'
-    ]
+      'Built separate patient and clinician interfaces for rhythm status, event history, ECG waveforms, probabilities, HRV, and signal quality.'
+    ],
+    links: [
+      { label: 'GitHub', href: 'https://github.com/arnavUCD/CardioSense', kind: 'github' },
+      { label: 'Pitch deck', href: cardioSensePitchDeck, kind: 'deck' }
+    ],
+    folderColor: '#7eb6c8',
+    folderDark: '#4f8fa4'
   },
   {
     id: 'infracopilot-ai',
     slug: 'infracopilot-ai',
     steps: [
-      'score 12 chargers nightly',
-      'cost-aware threshold at 0.40',
-      'rank by failure risk',
-      'dispatch, schedule, or ignore'
+      'score 50K chargers in one pass',
+      'load cost-aware threshold from model metadata',
+      'rank risk and explain top contributors',
+      'recommend action, urgency, and savings'
     ],
     title: 'InfraCopilot AI',
-    category: 'Full-Stack / Predictive ML',
+    category: 'Predictive ML / Decision Support',
     year: '2026',
     tagline: 'Predictive maintenance that flags a charger before it strands a driver.',
-    stack: ['scikit-learn', 'SMOTE', 'FastAPI', 'Next.js', 'Pandas'],
+    stack: ['Python', 'scikit-learn', 'SMOTE', 'Pandas', 'NumPy'],
     metrics: [
       { label: 'Failure recall', value: '90%', note: 'cost-aware threshold' },
       { label: 'Simulated savings', value: '$300K+', note: 'per network / yr' },
-      { label: 'Scoring', value: 'Real time', note: 'FastAPI' },
-      { label: 'Surface', value: 'Dashboard', note: 'root-cause insights' }
+      { label: 'Fleet scoring', value: '<3 sec', note: '50K chargers' },
+      { label: 'Dataset', value: '50K', note: 'simulated chargers' }
     ],
     client: 'UC Davis',
-    role: 'scikit-learn, FastAPI, Next.js',
+    role: 'Python, scikit-learn, Pandas, cost-aware modeling',
     description:
-      'A full-stack predictive-maintenance platform for EV charging networks that flags failing chargers before they strand a driver.',
+      'A fleet-triage ML prototype that scores simulated EV chargers, ranks failure risk, explains the leading contributing conditions, and recommends maintenance actions.',
     highlights: [
-      'Developed a cost-aware ML model (scikit-learn, SMOTE) achieving ~90% failure recall and $300K+ in simulated savings.',
-      'Engineered a FastAPI backend serving real-time risk scores across the network.',
-      'Built a Next.js dashboard surfacing root-cause insights and actionable maintenance recommendations.',
-      'Tuned the decision threshold around the real cost asymmetry between a missed failure and a false alarm.'
-    ]
+      'Developed a cost-aware model over 50,000 simulated chargers, reporting 90%+ failure recall and $300K+ in modeled savings.',
+      'Built a vectorized engine that scores 50,000 chargers in under three seconds and exports a ranked maintenance queue.',
+      'Explains each score with coefficient-based feature contributions and maps the leading condition to an actionable recommendation.',
+      'Tuned the decision threshold around a 24× cost asymmetry between a missed failure and a false alert.'
+    ],
+    links: [
+      { label: 'GitHub', href: 'https://github.com/arnavUCD/InfraCopilot-AI', kind: 'github' }
+    ],
+    folderColor: '#c49a68',
+    folderDark: '#987044'
   },
   {
     id: 'fake-news-classifier',
@@ -162,7 +191,10 @@ export const projects: Project[] = [
       'Achieved ~99% test accuracy with rigorous held-out evaluation.',
       'Designed probabilistic credibility scoring that goes beyond binary real/fake labels.',
       'Emphasized ethical model outputs — calibrated confidence instead of false certainty.'
-    ]
+    ],
+    links: [],
+    folderColor: '#a7a99a',
+    folderDark: '#797c6e'
   }
 ];
 

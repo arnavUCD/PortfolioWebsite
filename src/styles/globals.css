@@ -70,9 +70,9 @@
   --color-border: var(--border);
   --color-ring: var(--ring);
 
-  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-sans: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
   /* Kept as a safety net: any stray `font-mono` still resolves to the one face. */
-  --font-mono: 'Geist', ui-sans-serif, system-ui, -apple-system, sans-serif;
+  --font-mono: 'Geist Variable', ui-sans-serif, system-ui, -apple-system, sans-serif;
 }
 
 /* ─────────────────────────────────────────────
@@ -106,6 +106,13 @@
     letter-spacing: -0.011em;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
   }
 }
 
@@ -264,6 +271,146 @@
 /* Anywhere numbers are read against each other rather than in prose */
 .tnum {
   font-variant-numeric: tabular-nums;
+}
+
+/* ─────────────────────────────────────────────
+   Project desk
+   ───────────────────────────────────────────── */
+.project-folder {
+  perspective: 900px;
+  filter: drop-shadow(0 22px 24px rgba(70, 61, 46, 0.22));
+}
+
+.project-folder-back {
+  background: var(--folder-dark);
+  clip-path: polygon(0 12%, 34% 12%, 41% 0, 68% 0, 74% 12%, 100% 12%, 100% 100%, 0 100%);
+}
+
+.project-folder-paper {
+  box-shadow: 0 5px 16px rgba(44, 37, 27, 0.2);
+  transform: translateY(2%);
+  transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.project-folder-front {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.18), transparent 42%),
+    var(--folder-color);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.26),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.12);
+  transform-origin: bottom;
+  transition: transform 420ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.project-folder:hover .project-folder-paper,
+.project-folder.is-open .project-folder-paper {
+  transform: translateY(-10%);
+}
+
+.project-folder.is-open .project-folder-front {
+  transform: rotateX(-9deg) translateY(3%);
+}
+
+.project-panel {
+  box-shadow:
+    0 42px 100px -34px rgba(69, 58, 40, 0.48),
+    0 12px 30px -20px rgba(20, 20, 20, 0.22),
+    0 2px 0 rgba(255, 255, 255, 0.8) inset;
+}
+
+.project-visual {
+  position: relative;
+  display: flex;
+  min-height: 34rem;
+  align-items: center;
+  overflow: hidden;
+  padding: 3.5rem 1.25rem 2rem;
+  isolation: isolate;
+}
+
+.cardio-visual {
+  background:
+    linear-gradient(145deg, rgba(85, 185, 158, 0.08), transparent 45%),
+    #091115;
+}
+
+.verity-visual {
+  background:
+    linear-gradient(rgba(20, 42, 106, 0.045) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(20, 42, 106, 0.04) 1px, transparent 1px),
+    linear-gradient(145deg, #f9fbff, #eaf3ff);
+  background-size: 28px 28px, 28px 28px, 100% 100%;
+}
+
+.infra-visual {
+  background:
+    radial-gradient(circle at 80% 20%, rgba(244, 162, 97, 0.16), transparent 34%),
+    linear-gradient(145deg, #292721, #101113);
+}
+
+.news-visual {
+  background:
+    radial-gradient(circle at 15% 15%, rgba(212, 163, 115, 0.2), transparent 34%),
+    linear-gradient(145deg, #f3eee4, #ded8cc);
+}
+
+.visual-orb {
+  position: absolute;
+  z-index: -1;
+  width: 15rem;
+  height: 15rem;
+  border-radius: 999px;
+  filter: blur(48px);
+}
+
+.visual-label {
+  position: absolute;
+  left: 1.25rem;
+  top: 1.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  color: rgba(255, 255, 255, 0.55);
+  font-size: 0.55rem;
+  font-weight: 600;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.device-card {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 1.7rem;
+  padding: 1.25rem;
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.025)),
+    rgba(12, 22, 26, 0.9);
+  box-shadow:
+    0 28px 65px -25px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(20px);
+}
+
+.floating-chip {
+  position: absolute;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 0.75rem;
+  padding: 0.55rem 0.7rem;
+  background: rgba(18, 28, 31, 0.76);
+  color: rgba(255, 255, 255, 0.65);
+  font-size: 0.55rem;
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(14px);
+}
+
+@media (max-width: 767px) {
+  .project-visual {
+    min-height: 24rem;
+  }
 }
 
 /* ─────────────────────────────────────────────
