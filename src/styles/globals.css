@@ -43,8 +43,8 @@
 
   /* Text ramp */
   --ink: #17181a;
-  --ink-dim: #53565c;
-  --ink-faint: #797d84;
+  --ink-dim: #42464c;
+  --ink-faint: #666b72;
 
   /* Hairline rules */
   --rule: rgba(0, 0, 0, 0.09);
@@ -279,9 +279,13 @@
 .project-finder-stage {
   position: relative;
   display: grid;
-  height: clamp(42rem, 52vw, 46rem);
+  height: clamp(30rem, 43vw, 35rem);
   place-items: center;
   overflow: visible;
+}
+
+.project-finder-stage.has-open-project {
+  height: 39rem;
 }
 
 .project-finder-stage::before,
@@ -687,8 +691,9 @@
 
 .finder-project-dialog {
   position: absolute;
-  inset: 1.6rem 1.8rem;
-  overflow: hidden;
+  inset: 1.6rem 1.8rem auto;
+  max-height: calc(100% - 3.2rem);
+  overflow: auto;
   border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 1.8rem;
   box-shadow:
@@ -710,7 +715,7 @@
 }
 
 .project-panel-finder {
-  min-height: 100%;
+  min-height: 0;
   border: 0;
   border-radius: 1.72rem;
   box-shadow: none;
@@ -812,7 +817,11 @@
 
 @media (max-width: 1023px) {
   .project-finder-stage {
-    height: 42rem;
+    height: 34rem;
+  }
+
+  .project-finder-stage.has-open-project {
+    height: 39rem;
   }
 
   .project-finder-window {
@@ -841,6 +850,10 @@
 
 @media (max-width: 767px) {
   .project-finder-stage {
+    height: 34rem;
+  }
+
+  .project-finder-stage.has-open-project {
     height: 34rem;
   }
 
@@ -969,6 +982,7 @@
 
   .finder-project-dialog {
     inset: 0.45rem;
+    max-height: none;
     overflow: auto;
     border-radius: 1.25rem;
   }

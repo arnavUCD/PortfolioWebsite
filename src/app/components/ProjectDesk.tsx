@@ -55,7 +55,7 @@ export const ProjectDesk = ({ projects }: { projects: Project[] }) => {
   }, [activeProject]);
 
   return (
-    <div className="project-finder-stage">
+    <div className={`project-finder-stage ${activeProject ? 'has-open-project' : ''}`}>
       <section className="project-finder-window" aria-label="Project Finder">
         <header className="project-finder-toolbar">
           <div className="finder-traffic-lights" aria-hidden>

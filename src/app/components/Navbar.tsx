@@ -19,7 +19,7 @@ export const Navbar = () => {
   return (
     <>
     <nav className="fixed inset-x-0 top-3 z-50">
-      <div className="container mx-auto px-6 flex items-center justify-between gap-4">
+      <div className="mx-auto flex w-full max-w-[96rem] items-center justify-between gap-4 px-6">
         <Link to="/" className="shrink-0 text-lg tracking-[0.2em] uppercase hover:opacity-60 transition-opacity">
           Arnav<span className="text-ink-faint"> Sharma</span>
         </Link>
@@ -46,12 +46,12 @@ export const Navbar = () => {
           </div>
         </div>
 
-        <div className="hidden xl:flex items-center gap-3 shrink-0">
+        <div className="hidden shrink-0 items-center gap-2 xl:flex">
           <a
             href={site.resume}
             target="_blank"
             rel="noreferrer"
-            className="text-sm font-medium text-ink/85 hover:text-ink transition-colors"
+            className="inline-flex items-center rounded-full border border-black/12 bg-white/90 px-4 py-2.5 text-sm font-semibold text-ink shadow-sm transition-all hover:-translate-y-0.5 hover:border-black/20"
           >
             Résumé
           </a>
@@ -59,7 +59,7 @@ export const Navbar = () => {
             href={site.linkedin}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-ink/85 hover:text-ink transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-full border border-[#0a66c2] bg-[#0a66c2] px-4 py-2.5 text-sm font-semibold text-white shadow-[0_8px_20px_-12px_rgba(10,102,194,.9)] transition-all hover:-translate-y-0.5 hover:bg-[#0958a8]"
           >
             <Linkedin className="h-3.5 w-3.5" />
             LinkedIn
@@ -68,14 +68,14 @@ export const Navbar = () => {
             href={site.github}
             target="_blank"
             rel="noreferrer"
-            className="inline-flex items-center gap-1.5 text-sm font-medium text-ink/85 hover:text-ink transition-colors"
+            className="inline-flex items-center gap-1.5 rounded-full border border-[#17181a] bg-[#17181a] px-4 py-2.5 text-sm font-semibold text-white shadow-[0_8px_20px_-12px_rgba(0,0,0,.9)] transition-all hover:-translate-y-0.5 hover:bg-black"
           >
             <Github className="h-3.5 w-3.5" />
             GitHub
           </a>
           <a
             href={mailto}
-            className="inline-flex items-center gap-2 rounded-full border border-black/15 bg-white/90 px-5 py-2.5 text-sm font-medium text-ink shadow-sm transition-colors hover:border-accent hover:bg-accent hover:text-surface"
+            className="inline-flex items-center gap-2 rounded-full border border-black/15 bg-white/90 px-4 py-2.5 text-sm font-semibold text-ink shadow-sm transition-all hover:-translate-y-0.5 hover:border-accent hover:bg-accent hover:text-surface"
           >
             Email me
             <ArrowUpRight className="w-4 h-4" />
@@ -117,7 +117,7 @@ export const Navbar = () => {
               href={site.linkedin}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full glass-pill px-5 py-2.5 text-sm font-medium text-ink"
+              className="inline-flex items-center gap-2 rounded-full border border-[#0a66c2] bg-[#0a66c2] px-5 py-2.5 text-sm font-semibold text-white shadow-sm"
             >
               <Linkedin className="h-4 w-4" /> LinkedIn
             </a>
@@ -125,7 +125,7 @@ export const Navbar = () => {
               href={site.github}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full glass-pill px-5 py-2.5 text-sm font-medium text-ink"
+              className="inline-flex items-center gap-2 rounded-full border border-[#17181a] bg-[#17181a] px-5 py-2.5 text-sm font-semibold text-white shadow-sm"
             >
               <Github className="h-4 w-4" /> GitHub
             </a>
