@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { motion, useMotionValue, useSpring, useTransform, useReducedMotion } from 'motion/react';
 
 type Blob = {
@@ -31,20 +31,36 @@ const blobs: Blob[] = [
 export const CursorField = () => {
   const ref = useRef<HTMLDivElement>(null);
   const reduceMotion = useReducedMotion();
+  const [isVisible, setIsVisible] = useState(true);
 
   // Normalised pointer position, −0.5 … 0.5 from the centre of the field.
   const px = useMotionValue(0);
   const py = useMotionValue(0);
 
   useEffect(() => {
-    if (reduceMotion) return;
+    const field = ref.current;
+    if (!field) return;
+
+    const observer = new IntersectionObserver(
+      ([entry]) => setIsVisible(entry.isIntersecting),
+      { rootMargin: '120px 0px' }
+    );
+    observer.observe(field);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (
+      reduceMotion ||
+      !isVisible ||
+      !window.matchMedia('(hover: hover) and (pointer: fine)').matches
+    ) return;
 
     const onMove = (e: PointerEvent) => {
-      const el = ref.current;
-      if (!el) return;
-      const r = el.getBoundingClientRect();
-      px.set((e.clientX - r.left) / r.width - 0.5);
-      py.set((e.clientY - r.top) / r.height - 0.5);
+      // The hero fills the viewport while this listener is active. Using the
+      // viewport avoids a forced layout read on every Safari pointer event.
+      px.set(e.clientX / window.innerWidth - 0.5);
+      py.set(e.clientY / window.innerHeight - 0.5);
     };
 
     const onLeave = () => {
@@ -58,7 +74,7 @@ export const CursorField = () => {
       window.removeEventListener('pointermove', onMove);
       document.removeEventListener('pointerleave', onLeave);
     };
-  }, [px, py, reduceMotion]);
+  }, [isVisible, px, py, reduceMotion]);
 
   return (
     <div
@@ -67,7 +83,7 @@ export const CursorField = () => {
       className="absolute inset-0 overflow-hidden pointer-events-none grain-strong"
     >
       {blobs.map((blob, i) => (
-        <FieldBlob key={i} blob={blob} px={px} py={py} still={!!reduceMotion} />
+        <FieldBlob key={i} blob={blob} px={px} py={py} still={!!reduceMotion || !isVisible} />
       ))}
 
       {/* Keeps the type legible wherever the blobs drift — a dark scrim now,
@@ -113,7 +129,7 @@ const FieldBlob = ({
           style={{ background: `radial-gradient(closest-side, ${blob.color}, transparent 70%)` }}
           animate={
             still
-              ? undefined
+              ? { x: 0, y: 0, scale: 1 }
               : { x: [0, blob.drift, 0], y: [0, -blob.drift * 0.7, 0], scale: [1, 1.06, 1] }
           }
           transition={{ duration: blob.duration, repeat: Infinity, ease: 'easeInOut' }}

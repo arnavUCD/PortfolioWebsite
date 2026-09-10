@@ -114,6 +114,17 @@
   select {
     font: inherit;
   }
+
+  /* WebKit can otherwise wait to distinguish a tap from double-tap zoom.
+     Manipulation keeps normal panning and pinch zoom while dispatching taps
+     on controls immediately. */
+  a[href],
+  button,
+  [role='button'],
+  input[type='button'],
+  input[type='submit'] {
+    touch-action: manipulation;
+  }
 }
 
 /* ─────────────────────────────────────────────
@@ -363,8 +374,6 @@
   transition: color 150ms ease, background-color 150ms ease;
 }
 
-.finder-history-controls button:hover:not(:disabled),
-.finder-view-controls button:hover,
 .finder-view-controls button.is-active {
   color: white;
   background: rgba(255, 255, 255, 0.12);
@@ -479,7 +488,6 @@
   text-align: left;
 }
 
-.project-finder-sidebar nav button:hover,
 .project-finder-sidebar nav button.is-active {
   color: white;
   background: rgba(255, 255, 255, 0.11);
@@ -546,10 +554,6 @@
 
 .finder-folder {
   transition: background-color 150ms ease;
-}
-
-.finder-folder:hover {
-  background: rgba(255, 255, 255, 0.035);
 }
 
 .finder-folder-icon {
@@ -629,8 +633,6 @@
 }
 
 .finder-list-header span:last-child { text-align: right; }
-.finder-folder-row:hover { background: rgba(255,255,255,.07); }
-
 .finder-folder-icon-small {
   width: 1.9rem;
   height: 1.35rem;
@@ -1517,9 +1519,31 @@
   animation: marquee-drift var(--marquee-duration, 60s) linear infinite;
 }
 
-/* Hold a row still so a name can actually be read */
-.marquee:hover .marquee-track {
-  animation-play-state: paused;
+/* Hover-only feedback must not become a first-tap state on touch Safari. */
+@media (hover: hover) and (pointer: fine) {
+  .finder-history-controls button:hover:not(:disabled),
+  .finder-view-controls button:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.12);
+  }
+
+  .project-finder-sidebar nav button:hover {
+    color: white;
+    background: rgba(255, 255, 255, 0.11);
+  }
+
+  .finder-folder:hover {
+    background: rgba(255, 255, 255, 0.035);
+  }
+
+  .finder-folder-row:hover {
+    background: rgba(255,255,255,.07);
+  }
+
+  /* Hold a row still so a name can actually be read. */
+  .marquee:hover .marquee-track {
+    animation-play-state: paused;
+  }
 }
 
 /* ─────────────────────────────────────────────

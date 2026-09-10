@@ -95,6 +95,7 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
   );
 
   const [active, setActive] = useState<Active>(null);
+  const [simulationActive, setSimulationActive] = useState(false);
   const reduce = useReducedMotion();
 
   const wrapRef = useRef<HTMLDivElement>(null);
@@ -118,6 +119,34 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
   useEffect(() => {
     activeRef.current = active;
   }, [active]);
+
+  // Safari pays heavily for a page-wide animation loop, even when the moving
+  // layer is far below the viewport. Keep the exact same physics, but only run
+  // it while the graph is close enough to be seen and the tab is visible.
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    if (!wrap || reduce) {
+      setSimulationActive(false);
+      return;
+    }
+
+    let inView = false;
+    const sync = () => setSimulationActive(inView && document.visibilityState === 'visible');
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.isIntersecting;
+        sync();
+      },
+      { rootMargin: '160px 0px' }
+    );
+
+    observer.observe(wrap);
+    document.addEventListener('visibilitychange', sync);
+    return () => {
+      observer.disconnect();
+      document.removeEventListener('visibilitychange', sync);
+    };
+  }, [reduce]);
 
   /** Builds the world from the rendered pill sizes. Safe to call on every resize. */
   const build = useCallback(() => {
@@ -297,12 +326,18 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
 
   // Cursor tracking, in cloud-local pixels.
   useEffect(() => {
-    if (reduce) return;
+    if (
+      reduce ||
+      !simulationActive ||
+      !window.matchMedia('(hover: hover) and (pointer: fine)').matches
+    ) return;
+
+    const cloud = cloudRef.current;
+    if (!cloud) return;
+    let bounds: DOMRect | null = null;
 
     const onMove = (e: PointerEvent) => {
-      const cloud = cloudRef.current;
-      if (!cloud) return;
-      const r = cloud.getBoundingClientRect();
+      const r = bounds ?? (bounds = cloud.getBoundingClientRect());
       const x = e.clientX - r.left;
       const y = e.clientY - r.top;
       const pad = CURSOR_RADIUS;
@@ -312,18 +347,25 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
     const onLeave = () => {
       cursorRef.current = null;
     };
-
-    window.addEventListener('pointermove', onMove, { passive: true });
-    document.addEventListener('pointerleave', onLeave);
-    return () => {
-      window.removeEventListener('pointermove', onMove);
-      document.removeEventListener('pointerleave', onLeave);
+    const invalidateBounds = () => {
+      bounds = null;
     };
-  }, [reduce]);
+
+    cloud.addEventListener('pointermove', onMove, { passive: true });
+    cloud.addEventListener('pointerleave', onLeave);
+    window.addEventListener('scroll', invalidateBounds, { passive: true });
+    window.addEventListener('resize', invalidateBounds, { passive: true });
+    return () => {
+      cloud.removeEventListener('pointermove', onMove);
+      cloud.removeEventListener('pointerleave', onLeave);
+      window.removeEventListener('scroll', invalidateBounds);
+      window.removeEventListener('resize', invalidateBounds);
+    };
+  }, [reduce, simulationActive]);
 
   // The simulation loop.
   useEffect(() => {
-    if (reduce) return;
+    if (reduce || !simulationActive) return;
 
     let raf = 0;
     let last = 0;
@@ -417,7 +459,7 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
 
     raf = requestAnimationFrame(frame);
     return () => cancelAnimationFrame(raf);
-  }, [commit, reduce]);
+  }, [commit, reduce, simulationActive]);
 
   // Tear the world down with the component.
   useEffect(
@@ -476,7 +518,9 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
                 roleRefs.current[i] = el;
               }}
               tabIndex={0}
-              onMouseEnter={() => setActive({ kind: 'role', index: i })}
+              onPointerEnter={(event) => {
+                if (event.pointerType === 'mouse') setActive({ kind: 'role', index: i });
+              }}
               onFocus={() => setActive({ kind: 'role', index: i })}
               onClick={() => toggle({ kind: 'role', index: i })}
               style={{ opacity: roleLit(i) ? 1 : 0.28 }}
@@ -547,7 +591,9 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
               ref={(el) => {
                 skillRefs.current[i] = el;
               }}
-              onMouseEnter={() => setActive({ kind: 'skill', index: i })}
+              onPointerEnter={(event) => {
+                if (event.pointerType === 'mouse') setActive({ kind: 'skill', index: i });
+              }}
               onFocus={() => setActive({ kind: 'skill', index: i })}
               onClick={() => toggle({ kind: 'skill', index: i })}
               style={
