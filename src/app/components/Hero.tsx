@@ -31,6 +31,9 @@ export const Hero = () => {
         </motion.h1>
       </motion.div>
 
+      {/* The nav begins here, then docks to the top as the hero scrolls away. */}
+      <div id="nav-anchor" className="relative z-10 mt-14 h-[52px] w-full" />
+
       {/* Footnote, mirroring the reference layout */}
       <motion.span
         initial={{ opacity: 0 }}
