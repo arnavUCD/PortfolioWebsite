@@ -79,7 +79,7 @@ export const experience: ExperienceEntry[] = [
   {
     kind: 'projects',
     org: 'Independent Projects',
-    role: 'Verity · CardioSense · InfraCopilot AI · Fake News Classifier',
+    role: 'Credere AI · CardioSense · InfraCopilot AI · Fake News Classifier',
     period: '2025 — 2026',
     place: 'Self-directed',
     points: [

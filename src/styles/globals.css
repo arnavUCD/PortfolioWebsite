@@ -279,7 +279,7 @@
 .project-finder-stage {
   position: relative;
   display: grid;
-  height: clamp(30rem, 43vw, 35rem);
+  height: clamp(42rem, 52vw, 46rem);
   place-items: center;
   overflow: visible;
 }
@@ -688,7 +688,7 @@
 .finder-project-dialog {
   position: absolute;
   inset: 1.6rem 1.8rem;
-  overflow: auto;
+  overflow: hidden;
   border: 1px solid rgba(255, 255, 255, 0.35);
   border-radius: 1.8rem;
   box-shadow:
@@ -812,7 +812,7 @@
 
 @media (max-width: 1023px) {
   .project-finder-stage {
-    height: 34rem;
+    height: 42rem;
   }
 
   .project-finder-window {
@@ -969,6 +969,7 @@
 
   .finder-project-dialog {
     inset: 0.45rem;
+    overflow: auto;
     border-radius: 1.25rem;
   }
 
@@ -1108,65 +1109,162 @@
   perspective: 900px;
 }
 
-.agent-flow-line {
+.agent-console {
   position: absolute;
-  left: 12%;
-  right: 12%;
-  top: 43%;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, rgba(147, 215, 255, 0.9), transparent);
-  box-shadow: 0 0 16px rgba(96, 196, 255, 0.6);
+  inset: 0 1% 0.8rem;
+  overflow: hidden;
+  border: 1px solid rgba(151, 205, 255, 0.2);
+  border-radius: 1.05rem;
+  color: rgba(255, 255, 255, 0.86);
+  background:
+    linear-gradient(145deg, rgba(16, 30, 55, 0.98), rgba(4, 12, 27, 0.96));
+  box-shadow:
+    0 30px 58px -25px rgba(0, 0, 0, 0.9),
+    inset 0 1px 0 rgba(255, 255, 255, 0.07);
+  transform: rotate(-1deg);
 }
 
-.agent-node {
-  position: absolute;
-  top: 16%;
+.agent-console-bar {
   display: flex;
-  width: 7.5rem;
-  min-height: 6.5rem;
-  flex-direction: column;
+  height: 2.15rem;
+  align-items: center;
+  gap: 0.55rem;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding-inline: 0.8rem;
+  color: rgba(255, 255, 255, 0.34);
+  font-size: 0.5rem;
+  letter-spacing: 0.04em;
+}
+
+.agent-console-dots {
+  display: flex;
+  gap: 0.25rem;
+}
+
+.agent-console-dots i {
+  width: 0.32rem;
+  height: 0.32rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.agent-console-live {
+  display: flex;
+  margin-left: auto;
+  align-items: center;
+  gap: 0.3rem;
+  color: #7fe2c2;
+  text-transform: uppercase;
+}
+
+.agent-console-live i,
+.agent-console-event i {
+  width: 0.34rem;
+  height: 0.34rem;
+  border-radius: 999px;
+  background: currentColor;
+  box-shadow: 0 0 9px currentColor;
+}
+
+.agent-console-flow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1.15fr) auto minmax(0, 1fr);
+  align-items: center;
   gap: 0.45rem;
-  border: 1px solid rgba(255, 255, 255, 0.18);
-  border-radius: 1rem;
-  padding: 0.85rem;
-  color: rgba(255, 255, 255, 0.92);
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.18), rgba(255, 255, 255, 0.06));
-  box-shadow: 0 22px 42px -24px rgba(0, 0, 0, 0.8);
-  backdrop-filter: blur(14px);
+  padding: 1rem 0.85rem 0.75rem;
 }
 
-.agent-node span {
+.agent-console-node {
+  display: flex;
+  min-width: 0;
+  min-height: 4.8rem;
+  flex-direction: column;
+  gap: 0.32rem;
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  border-radius: 0.72rem;
+  padding: 0.65rem;
+  color: #a8d8ff;
+  background: rgba(255, 255, 255, 0.035);
+}
+
+.agent-console-node-core {
+  border-color: rgba(109, 201, 255, 0.35);
+  background: linear-gradient(145deg, rgba(58, 145, 205, 0.2), rgba(41, 92, 150, 0.08));
+  box-shadow: 0 0 24px rgba(63, 158, 226, 0.11);
+}
+
+.agent-console-node span {
   margin-top: auto;
-  font-size: 0.7rem;
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 0.62rem;
   font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.agent-node small {
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 0.55rem;
+.agent-console-node small {
+  overflow: hidden;
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.49rem;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
-.agent-node-left { left: 0; transform: rotate(-5deg) translateY(8px); }
-.agent-node-center { left: 50%; z-index: 2; transform: translateX(-50%) translateY(-8px); }
-.agent-node-right { right: 0; transform: rotate(5deg) translateY(8px); }
+.agent-console-arrow {
+  width: 0.75rem;
+  color: rgba(127, 202, 255, 0.46);
+}
 
-.scene-badge {
-  position: absolute;
-  bottom: 0;
+.agent-console-event {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.6rem;
+  margin: 0 0.85rem;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 0.58rem;
+  padding: 0.5rem 0.62rem;
+  background: rgba(255, 255, 255, 0.035);
+  font-size: 0.5rem;
+}
+
+.agent-console-event span {
   display: flex;
   align-items: center;
   gap: 0.4rem;
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  color: #7fe2c2;
+}
+
+.agent-console-event strong {
+  color: #f6c98e;
+  font-weight: 550;
+  text-transform: uppercase;
+}
+
+.agent-guardrail {
+  position: absolute;
+  right: -0.25rem;
+  bottom: -0.1rem;
+  z-index: 4;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 999px;
-  padding: 0.42rem 0.65rem;
-  color: rgba(255, 255, 255, 0.72);
-  background: rgba(5, 18, 43, 0.52);
-  font-size: 0.55rem;
+  padding: 0.48rem 0.7rem;
+  color: rgba(255, 255, 255, 0.76);
+  background: rgba(4, 13, 29, 0.82);
+  box-shadow: 0 15px 28px -16px rgba(0, 0, 0, 0.9);
+  font-size: 0.5rem;
   backdrop-filter: blur(12px);
 }
 
-.scene-badge-left { left: 9%; }
-.scene-badge-right { right: 9%; }
+.agent-guardrail span {
+  width: 1px;
+  height: 0.65rem;
+  background: rgba(255, 255, 255, 0.14);
+}
 
 .code-window {
   position: absolute;
@@ -1310,8 +1408,11 @@
 @media (max-width: 640px) {
   .experience-visual { min-height: 13rem; }
   .experience-scene { inset-inline: 0.8rem; }
-  .agent-node { width: 5.8rem; padding: 0.65rem; }
-  .scene-badge { display: none; }
+  .agent-console { inset-inline: 0; }
+  .agent-console-flow { gap: 0.25rem; padding-inline: 0.55rem; }
+  .agent-console-node { padding: 0.5rem; }
+  .agent-console-event { margin-inline: 0.55rem; }
+  .agent-guardrail { display: none; }
   .project-mini { width: 43%; }
   .project-mini-cardio,
   .project-mini-news { left: 28.5%; }

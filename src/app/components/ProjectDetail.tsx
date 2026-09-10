@@ -62,7 +62,11 @@ export const ProjectDetail = () => {
                     href={projectLink.href}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-2 rounded-full border border-glass-line bg-white/40 px-5 py-2.5 text-xs transition-colors hover:border-accent hover:text-accent"
+                    className={
+                      projectLink.kind === 'github'
+                        ? 'inline-flex items-center gap-2.5 rounded-full border border-[#17181a] bg-[#17181a] px-6 py-3.5 text-sm font-semibold text-white shadow-[0_12px_28px_-14px_rgba(0,0,0,.8)] transition-all hover:-translate-y-0.5 hover:bg-black hover:text-white'
+                        : 'inline-flex items-center gap-2 rounded-full border border-glass-line bg-white/55 px-5 py-3 text-sm font-medium transition-colors hover:border-accent hover:text-accent'
+                    }
                   >
                     <Icon className="h-4 w-4" />
                     {projectLink.label}

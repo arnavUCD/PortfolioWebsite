@@ -80,7 +80,11 @@ export const ProjectCard = ({
               href={projectLink.href}
               target="_blank"
               rel="noreferrer"
-              className="inline-flex items-center gap-2 rounded-full border border-black/15 px-4 py-2.5 text-xs transition-colors hover:border-accent hover:text-accent"
+              className={
+                projectLink.kind === 'github'
+                  ? 'inline-flex items-center gap-2.5 rounded-full border border-[#17181a] bg-[#17181a] px-5 py-3 text-sm font-semibold text-white shadow-[0_10px_24px_-12px_rgba(0,0,0,.8)] transition-all hover:-translate-y-0.5 hover:bg-black hover:text-white hover:shadow-[0_14px_28px_-12px_rgba(0,0,0,.9)]'
+                  : 'inline-flex items-center gap-2 rounded-full border border-black/15 px-4 py-2.5 text-xs font-medium transition-colors hover:border-accent hover:text-accent'
+              }
             >
               <LinkIcon kind={projectLink.kind} />
               {projectLink.label}

@@ -50,7 +50,7 @@ export const projects: Project[] = [
       'structured reference, exactly one candidate?',
       'post payment · audit marked automated'
     ],
-    title: 'Verity AI',
+    title: 'Credere AI',
     category: 'Agentic AI / Fintech',
     year: '2026',
     tagline: 'An AI finance agent that knows exactly when not to act on its own.',

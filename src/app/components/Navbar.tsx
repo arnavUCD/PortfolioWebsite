@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { Menu, X, ArrowUpRight, Github, Linkedin } from 'lucide-react';
 import { Link, useLocation } from 'react-router-dom';
 import { site, mailto } from '../data/site';
 
@@ -24,7 +24,7 @@ export const Navbar = () => {
           Arnav<span className="text-ink-faint"> Sharma</span>
         </Link>
 
-        <div className="hidden lg:flex absolute left-1/2 -translate-x-1/2">
+        <div className="hidden xl:flex absolute left-1/2 -translate-x-1/2">
           <div className="flex items-center gap-1 rounded-full border border-glass-line bg-white/80 p-1.5 shadow-[0_10px_34px_-12px_rgba(0,0,0,0.5)]">
             {navItems.map((item) => {
               const isActive = activePath === item.to;
@@ -46,18 +46,36 @@ export const Navbar = () => {
           </div>
         </div>
 
-        <div className="hidden lg:flex items-center gap-4 shrink-0">
+        <div className="hidden xl:flex items-center gap-3 shrink-0">
           <a
             href={site.resume}
             target="_blank"
             rel="noreferrer"
-            className="text-sm text-ink-dim hover:text-ink transition-colors"
+            className="text-sm font-medium text-ink/85 hover:text-ink transition-colors"
           >
             Résumé
           </a>
           <a
+            href={site.linkedin}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-ink/85 hover:text-ink transition-colors"
+          >
+            <Linkedin className="h-3.5 w-3.5" />
+            LinkedIn
+          </a>
+          <a
+            href={site.github}
+            target="_blank"
+            rel="noreferrer"
+            className="inline-flex items-center gap-1.5 text-sm font-medium text-ink/85 hover:text-ink transition-colors"
+          >
+            <Github className="h-3.5 w-3.5" />
+            GitHub
+          </a>
+          <a
             href={mailto}
-            className="inline-flex items-center gap-2 rounded-full glass-pill px-5 py-2.5 text-sm text-ink-dim hover:bg-accent hover:text-surface hover:border-accent transition-colors"
+            className="inline-flex items-center gap-2 rounded-full border border-black/15 bg-white/90 px-5 py-2.5 text-sm font-medium text-ink shadow-sm transition-colors hover:border-accent hover:bg-accent hover:text-surface"
           >
             Email me
             <ArrowUpRight className="w-4 h-4" />
@@ -67,7 +85,7 @@ export const Navbar = () => {
         <button
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle menu"
-          className="lg:hidden ml-auto z-50 w-11 h-11 rounded-full glass-pill flex items-center justify-center text-ink"
+          className="xl:hidden ml-auto z-50 w-11 h-11 rounded-full glass-pill flex items-center justify-center text-ink"
         >
           {isOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
@@ -75,7 +93,7 @@ export const Navbar = () => {
     </nav>
 
       {isOpen && (
-        <div className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-6 bg-surface/95 backdrop-blur-xl lg:hidden">
+        <div className="fixed inset-0 z-40 flex flex-col items-center justify-center gap-5 bg-surface/95 backdrop-blur-xl xl:hidden">
           {navItems.map((item) => (
             <Link
               key={item.name}
@@ -90,11 +108,29 @@ export const Navbar = () => {
             href={site.resume}
             target="_blank"
             rel="noreferrer"
-            className="rounded-full glass-pill px-8 py-3 text-3xl tracking-tight transition-colors hover:border-accent/40"
+            className="rounded-full glass-pill px-8 py-3 text-3xl font-medium tracking-tight text-ink transition-colors hover:border-accent/40"
           >
             Résumé
           </a>
-          <a href={mailto} className="mt-4 text-sm tracking-widest uppercase text-ink-dim">
+          <div className="flex flex-wrap justify-center gap-3">
+            <a
+              href={site.linkedin}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-full glass-pill px-5 py-2.5 text-sm font-medium text-ink"
+            >
+              <Linkedin className="h-4 w-4" /> LinkedIn
+            </a>
+            <a
+              href={site.github}
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-2 rounded-full glass-pill px-5 py-2.5 text-sm font-medium text-ink"
+            >
+              <Github className="h-4 w-4" /> GitHub
+            </a>
+          </div>
+          <a href={mailto} className="mt-3 text-sm font-medium tracking-widest uppercase text-ink">
             {site.email}
           </a>
         </div>

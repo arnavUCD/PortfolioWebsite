@@ -32,24 +32,39 @@ const VisualIcon = ({ variant }: { variant: Variant }) => {
 
 const AgentScene = () => (
   <div className="experience-scene experience-scene-agents">
-    <div className="agent-flow-line" />
-    <div className="agent-node agent-node-left">
-      <Database className="h-4 w-4" />
-      <span>CRM</span>
-      <small>live context</small>
+    <div className="agent-console">
+      <div className="agent-console-bar">
+        <span className="agent-console-dots"><i /><i /><i /></span>
+        <span>fonabit / agent runtime</span>
+        <span className="agent-console-live"><i /> live</span>
+      </div>
+
+      <div className="agent-console-flow">
+        <div className="agent-console-node">
+          <Database className="h-4 w-4" />
+          <span>CRM data</span>
+          <small>scoped context</small>
+        </div>
+        <ArrowRight className="agent-console-arrow" />
+        <div className="agent-console-node agent-console-node-core">
+          <BrainCircuit className="h-5 w-5" />
+          <span>MCP gateway</span>
+          <small>policy + tools</small>
+        </div>
+        <ArrowRight className="agent-console-arrow" />
+        <div className="agent-console-node">
+          <Bot className="h-4 w-4" />
+          <span>Agent team</span>
+          <small>A2A routed</small>
+        </div>
+      </div>
+
+      <div className="agent-console-event">
+        <span><i /> Lead action proposed</span>
+        <strong>approval required</strong>
+      </div>
     </div>
-    <div className="agent-node agent-node-center">
-      <BrainCircuit className="h-5 w-5" />
-      <span>MCP gateway</span>
-      <small>tools scoped</small>
-    </div>
-    <div className="agent-node agent-node-right">
-      <Bot className="h-4 w-4" />
-      <span>Agent team</span>
-      <small>A2A routed</small>
-    </div>
-    <div className="scene-badge scene-badge-left"><ShieldCheck className="h-3.5 w-3.5" /> RBAC enforced</div>
-    <div className="scene-badge scene-badge-right"><Check className="h-3.5 w-3.5" /> Human approved</div>
+    <div className="agent-guardrail"><ShieldCheck className="h-3.5 w-3.5" /> RBAC enforced <span /><Check className="h-3.5 w-3.5" /> Human gate</div>
   </div>
 );
 
@@ -79,7 +94,7 @@ const SoftwareScene = () => (
 const ProjectsScene = () => (
   <div className="experience-scene experience-scene-projects">
     <div className="project-mini project-mini-verity">
-      <span>VERITY</span>
+      <span>CREDERE AI</span>
       <strong>$18.4K</strong>
       <small><Check className="h-3 w-3" /> payment matched</small>
     </div>

@@ -1,4 +1,5 @@
 import { Activity, AlertTriangle, Check, HeartPulse, Newspaper, ShieldCheck, Zap } from 'lucide-react';
+import credereLogo from '../../assets/credere-navy.png';
 
 const Waveform = ({ color = '#51b89d' }: { color?: string }) => (
   <svg viewBox="0 0 320 72" className="h-auto w-full" aria-hidden>
@@ -32,12 +33,13 @@ const CardioVisual = () => (
   </div>
 );
 
-const VerityVisual = () => (
+const CredereVisual = () => (
   <div className="project-visual verity-visual">
     <div className="visual-orb -left-20 -top-20 bg-[#78bbff]/30" />
     <div className="visual-label text-[#142a6a]"><ShieldCheck className="h-3.5 w-3.5" /> Evidence-led automation</div>
     <div className="relative z-10 mx-auto w-[86%] max-w-[380px]">
       <div className="rounded-2xl border border-[#142a6a]/10 bg-white/90 p-5 shadow-[0_25px_60px_-28px_rgba(20,42,106,.6)]">
+        <img src={credereLogo} alt="Credere" className="mb-4 h-auto w-28" />
         <div className="flex items-center justify-between border-b border-black/[0.07] pb-4">
           <div><p className="text-[9px] uppercase tracking-[0.16em] text-black/35">Bank payment</p><p className="mt-1 font-data text-lg">$18,400.00</p></div>
           <span className="rounded-md bg-[#e6f4ef] px-2 py-1 text-[9px] font-medium text-[#0a7f5f]">CONFIRMED</span>
@@ -101,7 +103,7 @@ const NewsVisual = () => (
 
 export const ProjectVisual = ({ projectId }: { projectId: string }) => {
   if (projectId === 'cardiosense') return <CardioVisual />;
-  if (projectId === 'verity-ai') return <VerityVisual />;
+  if (projectId === 'verity-ai') return <CredereVisual />;
   if (projectId === 'infracopilot-ai') return <InfraVisual />;
   return <NewsVisual />;
 };
