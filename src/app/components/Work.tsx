@@ -12,8 +12,7 @@ export const Work = () => {
                ← Back to Home
              </Link>
              <h1 className="font-display text-6xl md:text-8xl tracking-[-0.02em] leading-[0.95]">
-               Projects <br />
-               <span className="font-display text-accent">2025—26</span>
+               Projects
              </h1>
            </div>
         </div>

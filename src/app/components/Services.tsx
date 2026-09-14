@@ -19,11 +19,10 @@ export const Services = () => {
           </div>
 
           <h2 className="font-display text-5xl md:text-7xl leading-[1.02] tracking-[-0.02em] text-ink">
-            Where it came from
+            Experience
           </h2>
           <p className="mt-6 max-w-2xl text-lg font-light text-ink-dim leading-relaxed">
-            Two software internships, the projects I build on my own, and a degree in progress
-            at UC Davis — and what each one actually taught me.
+            Internships, independent projects, and education at UC Davis.
           </p>
 
         </div>

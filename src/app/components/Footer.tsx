@@ -43,8 +43,7 @@ export const Footer = () => {
                 viewport={{ once: true }}
                 className="font-display text-6xl md:text-8xl tracking-[-0.02em] leading-[0.95] mb-16"
               >
-                Let's <br />
-                <span className="text-accent">Connect</span>
+                Contact
               </motion.h2>
 
               <div className="flex flex-col gap-10">

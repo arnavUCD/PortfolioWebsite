@@ -215,7 +215,7 @@ export const ProjectDesk = ({ projects }: { projects: Project[] }) => {
           <main className="project-finder-content">
             <div className="finder-content-heading">
               <div>
-                <p>{location === 'tech-blogs' ? 'Tech Blogs' : filter === 'all' ? 'Selected work' : filter}</p>
+                <p>{location === 'tech-blogs' ? 'Tech Blogs' : filter === 'all' ? 'Projects' : filter}</p>
                 <span>
                   {visibleItemCount} {location === 'tech-blogs'
                     ? visibleItemCount === 1 ? 'article' : 'articles'

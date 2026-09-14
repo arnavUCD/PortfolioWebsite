@@ -13,7 +13,7 @@ export const Projects = () => {
               <div className="flex items-baseline gap-3">
                 <span className="text-xs text-accent tabular-nums">02</span>
                 <span className="text-xs uppercase tracking-[0.3em] text-ink-dim">
-                  Selected Projects
+                  Projects
                 </span>
               </div>
               <div className="h-px w-32 bg-gradient-to-r from-black/20 to-transparent" />
@@ -22,7 +22,7 @@ export const Projects = () => {
               Projects
             </h2>
             <p className="mt-6 max-w-xl text-lg font-light text-ink-dim leading-relaxed">
-              Four systems, filed by what they solve. Open a folder to inspect the build.
+              Projects in AI, machine learning, embedded systems, and software.
             </p>
           </div>
 

@@ -7,9 +7,8 @@ import { ExperienceVisual } from './ExperienceVisual';
 const { Engine, Bodies, Body, Composite } = Matter;
 
 type Skill = { name: string; roles: number[] };
-type Active = { kind: 'role' | 'skill'; index: number } | null;
 
-/** The slowly-moving point each pill is pulled toward while nothing is selected. */
+/** The slowly-moving point each pill is pulled toward. */
 type Drift = { cx: number; cy: number; rx: number; ry: number; fx: number; fy: number; px: number; py: number };
 
 const mean = (ns: number[]) => ns.reduce((a, b) => a + b, 0) / ns.length;
@@ -50,15 +49,11 @@ const buildSkills = (entries: ExperienceEntry[]): Skill[] => {
  *   spring stiffness  ω  = sqrt(PULL * 278)      radians per step
  *   damping ratio     ζ  = DRAG / (2 * ω)
  *
- * DRAG 0.12 makes the gather critically damped (ζ ≈ 1.0), so pills arrive and
- * stop rather than overshooting, while the idle drift stays overdamped and
- * therefore slow and smooth.
+ * DRAG 0.12 keeps the idle drift overdamped, slow, and smooth.
  * ─────────────────────────────────────────────────────────────────────────── */
 
 /** Idle pull. ω ≈ 0.024/step, ζ ≈ 2.5 — heavily overdamped, so it merely loiters. */
 const PULL_IDLE = 0.0000021;
-/** Gather pull. ω ≈ 0.050/step, ζ ≈ 1.2 — overdamped, so it arrives without overshoot. */
-const PULL_GATHER = 0.000009;
 /** Air drag. Higher settles faster; lower keeps things floating longer. */
 const DRAG = 0.12;
 /** How much a pill rebounds off its neighbours. Kept low so contacts are soft. */
@@ -79,46 +74,25 @@ const STEP_MS = 1000 / 60;
 const COLUMNS = 3;
 /** Head-room kept at the top and bottom of the cloud. */
 const MARGIN = 22;
-/** The gathered cluster is laid out this wide, and this far apart vertically. */
-const GATHER_COLUMNS = 3;
-const GATHER_PITCH = 52;
-
 export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => {
   const skills = useMemo(() => buildSkills(entries), [entries]);
-  /** For each role, the indices of the skills it owns. */
-  const owned = useMemo(
-    () =>
-      entries.map((_, ri) =>
-        skills.map((s, si) => ({ s, si })).filter((x) => x.s.roles.includes(ri)).map((x) => x.si)
-      ),
-    [entries, skills]
-  );
 
-  const [active, setActive] = useState<Active>(null);
   const [simulationActive, setSimulationActive] = useState(false);
   const reduce = useReducedMotion();
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const cloudRef = useRef<HTMLDivElement>(null);
-  const roleRefs = useRef<(HTMLElement | null)[]>([]);
   const skillRefs = useRef<(HTMLElement | null)[]>([]);
 
   const engineRef = useRef<Matter.Engine | null>(null);
   const bodiesRef = useRef<Matter.Body[]>([]);
   const wallsRef = useRef<Matter.Body[]>([]);
   const driftRef = useRef<Drift[]>([]);
-  const gatheredRef = useRef<({ x: number; y: number } | null)[][]>([]);
   const sizeRef = useRef({ w: 0, h: 0 });
   /** Pill dimensions, cached at build so the loop never reads layout. */
   const sizesRef = useRef<{ w: number; h: number }[]>([]);
   /** Cursor in cloud-local pixels, or null when it is not over the field. */
   const cursorRef = useRef<{ x: number; y: number } | null>(null);
-
-  // The loop reads selection through a ref so it never needs re-subscribing.
-  const activeRef = useRef<Active>(null);
-  useEffect(() => {
-    activeRef.current = active;
-  }, [active]);
 
   // Safari pays heavily for a page-wide animation loop, even when the moving
   // layer is far below the viewport. Keep the exact same physics, but only run
@@ -226,50 +200,12 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
 
     Composite.add(engine.world, [...bodiesRef.current, ...wallsRef.current]);
 
-    // Where each role's skills gather: a loose grid filling the horizontal band
-    // the card occupies, so they arrive in front of it rather than beside it.
-    const roleCentres = roleRefs.current.map((el) => {
-      if (!el) return c.height / 2;
-      const r = el.getBoundingClientRect();
-      return r.top - c.top + r.height / 2;
-    });
-
-    gatheredRef.current = owned.map((list, ri) => {
-      const slots: ({ x: number; y: number } | null)[] = skills.map(() => null);
-      if (!list.length) return slots;
-
-      const gridRows = Math.ceil(list.length / GATHER_COLUMNS);
-      const bandH = gridRows * GATHER_PITCH;
-      const top = clamp(
-        roleCentres[ri] - bandH / 2,
-        MARGIN,
-        Math.max(MARGIN, c.height - bandH - MARGIN)
-      );
-      const colW = c.width / GATHER_COLUMNS;
-
-      list.forEach((si, idx) => {
-        const name = skills[si].name;
-        const w = skillRefs.current[si]?.offsetWidth || 80;
-        slots[si] = {
-          x: clamp(
-            (idx % GATHER_COLUMNS) * colW + colW / 2 + (noise(name, 8) - 0.5) * 40,
-            w / 2,
-            Math.max(w / 2, c.width - w / 2)
-          ),
-          y: top + Math.floor(idx / GATHER_COLUMNS) * GATHER_PITCH + GATHER_PITCH / 2 +
-             (noise(name, 9) - 0.5) * 16
-        };
-      });
-
-      return slots;
-    });
-  }, [skills, owned]);
+  }, [skills]);
 
   /**
    * Pushes every body's current position onto its DOM node. Sizes come from the
    * cache rather than `offsetWidth`, which would force a layout on all 53 pills
-   * every frame. The scale factor is a CSS variable React owns, so the lit pill
-   * can rise without the loop needing to know about selection.
+   * every frame.
    */
   const commit = useCallback(() => {
     const sizes = sizesRef.current;
@@ -277,9 +213,7 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
       const el = skillRefs.current[i];
       const s = sizes[i];
       if (!el || !s) return;
-      el.style.transform =
- `translate3d(${body.position.x - s.w / 2}px, ${body.position.y - s.h / 2}px, 0) ` +
- `scale(var(--lift, 1))`;
+      el.style.transform = `translate3d(${body.position.x - s.w / 2}px, ${body.position.y - s.h / 2}px, 0)`;
     });
   }, []);
 
@@ -388,8 +322,6 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
           steps++;
           t += STEP_MS / 1000;
 
-          const sel = activeRef.current;
-          const slots = !reduce && sel?.kind === 'role' ? gatheredRef.current[sel.index] : null;
           const cursor = cursorRef.current;
           const { w, h } = sizeRef.current;
 
@@ -397,11 +329,9 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
             const d = driftRef.current[i];
             if (!d) return;
 
-            const slot = slots?.[i] ?? null;
-
-            // Idle: chase a point that is itself wandering, on two
+            // Chase a point that is itself wandering, on two
             // incommensurate harmonics so the path never repeats visibly.
-            const target = slot ?? {
+            const target = {
               x: clamp(
                 d.cx +
                   d.rx *
@@ -418,9 +348,8 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
               )
             };
 
-            const k = slot ? PULL_GATHER : PULL_IDLE;
-            let fx = (target.x - body.position.x) * k * body.mass;
-            let fy = (target.y - body.position.y) * k * body.mass;
+            let fx = (target.x - body.position.x) * PULL_IDLE * body.mass;
+            let fy = (target.y - body.position.y) * PULL_IDLE * body.mass;
 
             // Cursor shoves pills aside, falling off smoothly to nothing.
             if (cursor) {
@@ -473,62 +402,26 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
     []
   );
 
-  const roleLit = (i: number) =>
-    !active ||
-    (active.kind === 'role' && active.index === i) ||
-    (active.kind === 'skill' && skills[active.index].roles.includes(i));
-
-  const skillLit = (i: number) =>
-    !active ||
-    (active.kind === 'skill' && active.index === i) ||
-    (active.kind === 'role' && skills[i].roles.includes(active.index));
-
-  const isSkillOn = (i: number) =>
-    (active?.kind === 'skill' && active.index === i) ||
-    (active?.kind === 'role' && skills[i].roles.includes(active.index));
-
   const kindLabel = (kind: ExperienceEntry['kind']) =>
     kind === 'education' ? 'Education' : kind === 'projects' ? 'Self-directed' : 'Internship';
-
-  /** Tap support: on touch there is no hover, so selection toggles and sticks. */
-  const toggle = (next: NonNullable<Active>) =>
-    setActive((prev) =>
-      prev && prev.kind === next.kind && prev.index === next.index ? null : next
-    );
 
   return (
     <div>
       <p className="mb-12 text-[11px] uppercase tracking-[0.25em] text-ink-faint">
-        {skills.length} skills, drifting
-        <span className="hidden lg:inline"> · pick a role and the ones it taught gather to it</span>
+        Skills from my experience and education
       </p>
 
       {/* ── Graph (wide screens only — the cloud needs the horizontal room) ── */}
       <div
         ref={wrapRef}
-        onMouseLeave={() => setActive(null)}
         className="relative hidden lg:grid lg:grid-cols-[minmax(0,34rem)_1fr] lg:gap-12 xl:gap-20"
       >
         {/* Roles */}
         <div className="relative z-10 flex flex-col justify-center gap-7">
-          {entries.map((entry, i) => (
+          {entries.map((entry) => (
             <article
               key={entry.org}
-              ref={(el) => {
-                roleRefs.current[i] = el;
-              }}
-              tabIndex={0}
-              onPointerEnter={(event) => {
-                if (event.pointerType === 'mouse') setActive({ kind: 'role', index: i });
-              }}
-              onFocus={() => setActive({ kind: 'role', index: i })}
-              onClick={() => toggle({ kind: 'role', index: i })}
-              style={{ opacity: roleLit(i) ? 1 : 0.28 }}
-              className={`experience-card group cursor-default overflow-hidden rounded-[1.75rem] outline-none transition-[opacity,border-color,box-shadow,transform] duration-300 focus-visible:ring-2 focus-visible:ring-accent/40 ${
-                active?.kind === 'role' && active.index === i
-                  ? 'experience-card-active'
-                  : ''
-              }`}
+              className="experience-card group overflow-hidden rounded-[1.75rem]"
             >
               <ExperienceVisual entry={entry} />
               <div className="experience-card-body relative z-10 -mt-7 rounded-t-[1.65rem] p-7">
@@ -585,36 +478,24 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
         {/* Skill cloud — every position comes from the physics world */}
         <div ref={cloudRef} className="relative z-10 min-h-[36rem]">
           {skills.map((skill, i) => (
-            <button
+            <span
               key={skill.name}
-              type="button"
               ref={(el) => {
                 skillRefs.current[i] = el;
               }}
-              onPointerEnter={(event) => {
-                if (event.pointerType === 'mouse') setActive({ kind: 'skill', index: i });
-              }}
-              onFocus={() => setActive({ kind: 'skill', index: i })}
-              onClick={() => toggle({ kind: 'skill', index: i })}
               style={
                 {
-                  opacity: skillLit(i) ? 1 : 0.14,
-                  // Read by the transform the physics loop writes, so the lift
-                  // composes with the position instead of fighting it.
-                  '--lift': isSkillOn(i) ? 1.07 : 1,
                   willChange: 'transform'
                 } as React.CSSProperties
               }
-              className={`absolute left-0 top-0 whitespace-nowrap rounded-full px-4 py-2 text-left text-sm outline-none transition-[opacity,background-color,border-color,box-shadow,color] duration-300 focus-visible:ring-2 focus-visible:ring-accent/40 ${
-                isSkillOn(i) ? 'neu-pill neu-pill-on text-ink' : 'neu-pill text-ink-dim'
-              }`}
+              className="absolute left-0 top-0 whitespace-nowrap rounded-full px-4 py-2 text-left text-sm neu-pill text-ink-dim"
             >
               {skill.name}
               {/* Skills earned in more than one place are the interesting ones */}
               {skill.roles.length > 1 && (
                 <span className="ml-2 text-[10px] text-accent">×{skill.roles.length}</span>
               )}
-            </button>
+            </span>
           ))}
         </div>
       </div>
