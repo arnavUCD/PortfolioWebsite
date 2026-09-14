@@ -399,6 +399,11 @@
   font-weight: 550;
 }
 
+.finder-location button {
+  border-radius: 0.3rem;
+  color: inherit;
+}
+
 .finder-toolbar-actions {
   display: flex;
   align-items: center;
@@ -546,7 +551,7 @@
 
 .finder-folder-grid {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   align-items: start;
   gap: 1.5rem 1.15rem;
   padding: 2.2rem 0.5rem;
@@ -620,6 +625,72 @@
   display: grid;
   gap: 0.15rem;
   padding-top: 0.35rem;
+}
+
+.finder-blog-file,
+.finder-blog-row {
+  transition: background-color 150ms ease;
+}
+
+.finder-blog-document {
+  position: relative;
+  display: grid;
+  width: 4.85rem;
+  height: 6rem;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 0.48rem 0.95rem 0.48rem 0.48rem;
+  color: white;
+  background:
+    linear-gradient(145deg, rgba(255,255,255,.13), transparent 38%),
+    linear-gradient(160deg, #2d333b, #111519 75%);
+  box-shadow:
+    0 16px 22px -15px rgba(0, 0, 0, 0.92),
+    inset 0 1px 0 rgba(255,255,255,.18);
+}
+
+.finder-blog-document::after {
+  content: '';
+  position: absolute;
+  top: -1px;
+  right: -1px;
+  width: 1.15rem;
+  height: 1.15rem;
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 0 0 0 0.3rem;
+  background: #66778b;
+  clip-path: polygon(0 0, 100% 100%, 0 100%);
+}
+
+.finder-blog-document span {
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: 2rem;
+  font-weight: 700;
+  letter-spacing: -0.09em;
+}
+
+.finder-blog-document svg {
+  position: absolute;
+  right: 0.45rem;
+  bottom: 0.42rem;
+  width: 0.75rem;
+  height: 0.75rem;
+  color: rgba(255,255,255,.36);
+}
+
+.finder-blog-document-small {
+  width: 1.65rem;
+  height: 2rem;
+  border-radius: 0.2rem 0.38rem 0.2rem 0.2rem;
+}
+
+.finder-blog-document-small span {
+  font-size: 0.78rem;
+}
+
+.finder-blog-title {
+  text-wrap: balance;
 }
 
 .finder-list-header {
@@ -1538,6 +1609,11 @@
 
   .finder-folder-row:hover {
     background: rgba(255,255,255,.07);
+  }
+
+  .finder-blog-file:hover,
+  .finder-blog-row:hover {
+    background: rgba(255,255,255,.05);
   }
 
   /* Hold a row still so a name can actually be read. */
