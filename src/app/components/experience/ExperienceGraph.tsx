@@ -54,6 +54,8 @@ const buildSkills = (entries: ExperienceEntry[]): Skill[] => {
 
 /** Idle pull. ω ≈ 0.024/step, ζ ≈ 2.5 — heavily overdamped, so it merely loiters. */
 const PULL_IDLE = 0.0000021;
+/** Pull used only when a role panel gathers its related skills. */
+const PULL_GATHER = 0.000009;
 /** Air drag. Higher settles faster; lower keeps things floating longer. */
 const DRAG = 0.12;
 /** How much a pill rebounds off its neighbours. Kept low so contacts are soft. */
@@ -74,25 +76,42 @@ const STEP_MS = 1000 / 60;
 const COLUMNS = 3;
 /** Head-room kept at the top and bottom of the cloud. */
 const MARGIN = 22;
+const GATHER_COLUMNS = 3;
+const GATHER_PITCH = 52;
+
 export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => {
   const skills = useMemo(() => buildSkills(entries), [entries]);
+  const owned = useMemo(
+    () => entries.map((_, roleIndex) =>
+      skills.flatMap((skill, skillIndex) => skill.roles.includes(roleIndex) ? [skillIndex] : [])
+    ),
+    [entries, skills]
+  );
 
+  const [activeRole, setActiveRole] = useState<number | null>(null);
   const [simulationActive, setSimulationActive] = useState(false);
   const reduce = useReducedMotion();
 
   const wrapRef = useRef<HTMLDivElement>(null);
   const cloudRef = useRef<HTMLDivElement>(null);
+  const roleRefs = useRef<(HTMLElement | null)[]>([]);
   const skillRefs = useRef<(HTMLElement | null)[]>([]);
 
   const engineRef = useRef<Matter.Engine | null>(null);
   const bodiesRef = useRef<Matter.Body[]>([]);
   const wallsRef = useRef<Matter.Body[]>([]);
   const driftRef = useRef<Drift[]>([]);
+  const gatheredRef = useRef<({ x: number; y: number } | null)[][]>([]);
   const sizeRef = useRef({ w: 0, h: 0 });
   /** Pill dimensions, cached at build so the loop never reads layout. */
   const sizesRef = useRef<{ w: number; h: number }[]>([]);
   /** Cursor in cloud-local pixels, or null when it is not over the field. */
   const cursorRef = useRef<{ x: number; y: number } | null>(null);
+  const activeRoleRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    activeRoleRef.current = activeRole;
+  }, [activeRole]);
 
   // Safari pays heavily for a page-wide animation loop, even when the moving
   // layer is far below the viewport. Keep the exact same physics, but only run
@@ -200,7 +219,42 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
 
     Composite.add(engine.world, [...bodiesRef.current, ...wallsRef.current]);
 
-  }, [skills]);
+    const roleCentres = roleRefs.current.map((element) => {
+      if (!element) return c.height / 2;
+      const roleBounds = element.getBoundingClientRect();
+      return roleBounds.top - c.top + roleBounds.height / 2;
+    });
+
+    gatheredRef.current = owned.map((list, roleIndex) => {
+      const slots: ({ x: number; y: number } | null)[] = skills.map(() => null);
+      if (!list.length) return slots;
+
+      const rowsInGroup = Math.ceil(list.length / GATHER_COLUMNS);
+      const groupHeight = rowsInGroup * GATHER_PITCH;
+      const top = clamp(
+        roleCentres[roleIndex] - groupHeight / 2,
+        MARGIN,
+        Math.max(MARGIN, c.height - groupHeight - MARGIN)
+      );
+      const columnWidth = c.width / GATHER_COLUMNS;
+
+      list.forEach((skillIndex, index) => {
+        const name = skills[skillIndex].name;
+        const width = skillRefs.current[skillIndex]?.offsetWidth || 80;
+        slots[skillIndex] = {
+          x: clamp(
+            (index % GATHER_COLUMNS) * columnWidth + columnWidth / 2 + (noise(name, 8) - 0.5) * 40,
+            width / 2,
+            Math.max(width / 2, c.width - width / 2)
+          ),
+          y: top + Math.floor(index / GATHER_COLUMNS) * GATHER_PITCH + GATHER_PITCH / 2 +
+             (noise(name, 9) - 0.5) * 16
+        };
+      });
+
+      return slots;
+    });
+  }, [owned, skills]);
 
   /**
    * Pushes every body's current position onto its DOM node. Sizes come from the
@@ -213,7 +267,9 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
       const el = skillRefs.current[i];
       const s = sizes[i];
       if (!el || !s) return;
-      el.style.transform = `translate3d(${body.position.x - s.w / 2}px, ${body.position.y - s.h / 2}px, 0)`;
+      el.style.transform =
+        `translate3d(${body.position.x - s.w / 2}px, ${body.position.y - s.h / 2}px, 0) ` +
+        `scale(var(--lift, 1))`;
     });
   }, []);
 
@@ -323,15 +379,18 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
           t += STEP_MS / 1000;
 
           const cursor = cursorRef.current;
+          const selectedRole = activeRoleRef.current;
+          const slots = selectedRole === null ? null : gatheredRef.current[selectedRole];
           const { w, h } = sizeRef.current;
 
           bodies.forEach((body, i) => {
             const d = driftRef.current[i];
             if (!d) return;
 
-            // Chase a point that is itself wandering, on two
-            // incommensurate harmonics so the path never repeats visibly.
-            const target = {
+            const slot = slots?.[i] ?? null;
+            // Related skills gather to the selected role. Otherwise each pill
+            // chases a wandering point so the idle path never visibly repeats.
+            const target = slot ?? {
               x: clamp(
                 d.cx +
                   d.rx *
@@ -348,8 +407,9 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
               )
             };
 
-            let fx = (target.x - body.position.x) * PULL_IDLE * body.mass;
-            let fy = (target.y - body.position.y) * PULL_IDLE * body.mass;
+            const pull = slot ? PULL_GATHER : PULL_IDLE;
+            let fx = (target.x - body.position.x) * pull * body.mass;
+            let fy = (target.y - body.position.y) * pull * body.mass;
 
             // Cursor shoves pills aside, falling off smoothly to nothing.
             if (cursor) {
@@ -414,14 +474,32 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
       {/* ── Graph (wide screens only — the cloud needs the horizontal room) ── */}
       <div
         ref={wrapRef}
+        onMouseLeave={() => setActiveRole(null)}
         className="relative hidden lg:grid lg:grid-cols-[minmax(0,34rem)_1fr] lg:gap-12 xl:gap-20"
       >
         {/* Roles */}
         <div className="relative z-10 flex flex-col justify-center gap-7">
-          {entries.map((entry) => (
+          {entries.map((entry, index) => (
             <article
               key={entry.org}
-              className="experience-card group overflow-hidden rounded-[1.75rem]"
+              ref={(element) => {
+                roleRefs.current[index] = element;
+              }}
+              tabIndex={0}
+              onPointerEnter={(event) => {
+                if (event.pointerType === 'mouse') setActiveRole(index);
+              }}
+              onPointerDown={(event) => {
+                if (event.pointerType !== 'mouse') {
+                  setActiveRole((current) => current === index ? null : index);
+                }
+              }}
+              onFocus={() => setActiveRole(index)}
+              onBlur={() => setActiveRole(null)}
+              style={{ opacity: activeRole === null || activeRole === index ? 1 : 0.28 }}
+              className={`experience-card group cursor-default overflow-hidden rounded-[1.75rem] outline-none transition-[opacity,border-color,box-shadow,transform] duration-300 focus-visible:ring-2 focus-visible:ring-accent/40 ${
+                activeRole === index ? 'experience-card-active' : ''
+              }`}
             >
               <ExperienceVisual entry={entry} />
               <div className="experience-card-body relative z-10 -mt-7 rounded-t-[1.65rem] p-7">
@@ -485,10 +563,16 @@ export const ExperienceGraph = ({ entries }: { entries: ExperienceEntry[] }) => 
               }}
               style={
                 {
+                  opacity: activeRole === null || skill.roles.includes(activeRole) ? 1 : 0.14,
+                  '--lift': activeRole !== null && skill.roles.includes(activeRole) ? 1.07 : 1,
                   willChange: 'transform'
                 } as React.CSSProperties
               }
-              className="absolute left-0 top-0 whitespace-nowrap rounded-full px-4 py-2 text-left text-sm neu-pill text-ink-dim"
+              className={`absolute left-0 top-0 whitespace-nowrap rounded-full px-4 py-2 text-left text-sm transition-[opacity,background-color,border-color,box-shadow,color] duration-300 ${
+                activeRole !== null && skill.roles.includes(activeRole)
+                  ? 'neu-pill neu-pill-on text-ink'
+                  : 'neu-pill text-ink-dim'
+              }`}
             >
               {skill.name}
               {/* Skills earned in more than one place are the interesting ones */}
