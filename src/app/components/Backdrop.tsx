@@ -31,40 +31,20 @@ export const Backdrop = () => {
         }}
       />
 
-      {/* Ambient colour. These are fixed to the viewport rather than the
-          document, so every section picks up some warmth instead of the page
-          going flat white once the hero scrolls away. On a light ground they
-          work as tinted washes rather than glows — held very low, so they
-          register as paper tone and never as visible shapes. */}
-
-      {/* Warm key, off-center left */}
+      {/* Ambient colour. One layered gradient preserves the same five pools of
+          light without asking WebKit to composite five viewport-sized blur
+          filters on every frame. */}
       <div
-        className="absolute -left-[15%] top-[8%] w-[70vw] h-[70vw] rounded-full opacity-[0.55] blur-[150px]"
-        style={{ background: 'radial-gradient(closest-side, var(--surface-warm), transparent 72%)' }}
-      />
-
-      {/* Cool mint counterweight, low right */}
-      <div
-        className="absolute -right-[20%] bottom-[-10%] w-[65vw] h-[65vw] rounded-full opacity-[0.07] blur-[160px]"
-        style={{ background: 'radial-gradient(closest-side, var(--accent), transparent 70%)' }}
-      />
-
-      {/* Cool rim, high right — keeps the top of every section off pure black */}
-      <div
-        className="absolute -right-[10%] -top-[15%] w-[55vw] h-[55vw] rounded-full opacity-[0.05] blur-[150px]"
-        style={{ background: 'radial-gradient(closest-side, var(--accent-strong), transparent 70%)' }}
-      />
-
-      {/* Warm fill, mid-left, sitting behind the middle of the page */}
-      <div
-        className="absolute left-[8%] top-[42%] w-[50vw] h-[50vw] rounded-full opacity-[0.4] blur-[170px]"
-        style={{ background: 'radial-gradient(closest-side, var(--surface-warm), transparent 74%)' }}
-      />
-
-      {/* A soft pool low-centre, so the footer is lit rather than fading out */}
-      <div
-        className="absolute left-1/2 -translate-x-1/2 bottom-[-18%] w-[75vw] h-[45vw] rounded-full opacity-[0.28] blur-[170px]"
-        style={{ background: 'radial-gradient(closest-side, #e8dfc9, transparent 72%)' }}
+        className="absolute inset-0"
+        style={{
+          background: [
+            'radial-gradient(ellipse 58% 60% at 18% 27%, rgba(247, 239, 223, 0.55) 0%, rgba(247, 239, 223, 0.28) 42%, transparent 76%)',
+            'radial-gradient(ellipse 48% 52% at 88% 65%, rgba(14, 124, 134, 0.07) 0%, rgba(14, 124, 134, 0.035) 44%, transparent 75%)',
+            'radial-gradient(ellipse 43% 48% at 84% 17%, rgba(10, 95, 104, 0.05) 0%, rgba(10, 95, 104, 0.024) 43%, transparent 74%)',
+            'radial-gradient(ellipse 46% 52% at 32% 77%, rgba(247, 239, 223, 0.4) 0%, rgba(247, 239, 223, 0.19) 46%, transparent 78%)',
+            'radial-gradient(ellipse 60% 38% at 50% 112%, rgba(232, 223, 201, 0.28) 0%, rgba(232, 223, 201, 0.13) 48%, transparent 80%)',
+          ].join(', '),
+        }}
       />
 
       {/* Tubelight — a strip fixture just above the viewport. The tube itself is
