@@ -36,7 +36,7 @@ export const About = () => {
               transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1] }}
               className="font-display text-5xl md:text-7xl leading-[1.02] tracking-[-0.02em] text-ink mb-12"
             >
-              About
+              A bit about <span className="text-accent">me</span>.
             </motion.h2>
 
             <motion.div
@@ -47,14 +47,34 @@ export const About = () => {
               className="space-y-6 text-lg font-light text-ink-dim leading-relaxed max-w-xl"
             >
               <p>
-                I’m a Computer Science student at UC Davis with a minor in Business Studies.
+                I'm Arnav, a Computer Science student at UC Davis with a minor in Business
+                Studies. I grew up around technology as something you take apart rather than
+                just use, and that curiosity is more or less what led me here.
               </p>
               <p>
-                I’m interested in artificial intelligence, machine learning, computer vision,
-                and the software systems that make them work.
+                My coursework has pulled me toward the areas where software meets intelligence
+                — machine learning, artificial intelligence, and computer vision — alongside
+                the fundamentals that make it all run: operating systems and computer
+                architecture. I like that combination. Understanding what a model does is
+                interesting; understanding what the machine underneath is actually doing when
+                it runs is what makes it click.
               </p>
               <p>
-                I enjoy building practical products where technology and business meet.
+                The business minor came from a genuine interest rather than a strategy. I'm
+                curious about markets, about why some products work and others don't, and about
+                the reasoning behind decisions that get made long before anyone writes code.
+                It's a different way of thinking than engineering, and I find that having both
+                makes each one sharper.
+              </p>
+              <p>
+                Outside of class, I'm usually reading about whatever I've become temporarily
+                obsessed with, following how the AI space keeps reshaping itself month to
+                month, and learning things I have no immediate use for — which, in my
+                experience, is usually when the useful stuff sticks.
+              </p>
+              <p>
+                I'm based in Davis, California, and always up for a conversation about
+                technology, markets, or anything in between.
               </p>
             </motion.div>
           </div>
